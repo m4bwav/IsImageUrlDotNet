@@ -11,6 +11,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Description = Extension and Static method to check if a url is for an image.
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{16AA7ECE-9B7D-4A6D-A9DF-A812123B765F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
