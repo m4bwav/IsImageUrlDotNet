@@ -8,6 +8,7 @@ open System.IO
 module IsImageUrlDotNetLib =   
     let ImageFileExtensions = ["png"; "jpg"; "gif"; "raw";"bmp"; "svg"; "gif"; "raw";]
     let NonImageFileExtensions = ["exe"; "pdf"; "html"; "htm"; "txt"; "mp3"; "wav"; "odp";]
+
     let private hasAFileExtensionInList(url:string, fileExtensionList:string list) =
       if Path.HasExtension url = false then
          false
