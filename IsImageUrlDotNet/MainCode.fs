@@ -8,21 +8,19 @@ open System.IO
 module IsImageUrlDotNetLib =   
     let ImageFileExtensions = ["png"; "jpg"; "gif"; "raw";"bmp"; "svg"; "gif"; "raw";]
     let NonImageFileExtensions = ["exe"; "pdf"; "html"; "htm"; "txt"; "mp3"; "wav"; "odp";]
-    let private hasAnImageFileExtension(url:string) =
+    let private hasAFileExtensionInList(url:string, fileExtensionList:string list) =
       if Path.HasExtension url = false then
          false
       else  
          let urlSplitList = url.ToLower().Split '.'
          let lastExtension = urlSplitList.[urlSplitList.Length - 1]
-         List.contains lastExtension ImageFileExtensions
+         List.contains lastExtension fileExtensionList
+
+    let private hasAnImageFileExtension(url:string) =
+      hasAFileExtensionInList(url, ImageFileExtensions)
 
     let private hasAnNonImageFileExtension(url:string) =
-      if Path.HasExtension url = false then
-         false
-      else  
-         let urlSplitList = url.ToLower().Split '.'
-         let lastExtension = urlSplitList.[urlSplitList.Length - 1]
-         List.contains lastExtension NonImageFileExtensions
+      hasAFileExtensionInList(url, NonImageFileExtensions)
 
     let private requestUrlAndCheckIfImage(url:string) =
         let req = WebRequest.Create(Uri(url)) 
