@@ -1,4 +1,4 @@
-language: fsharp
+language: csharp
 
 os:
   - linux
