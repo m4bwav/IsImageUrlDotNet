@@ -1,2 +1,9 @@
 language: csharp
 solution: IsImageUrlDotNet.sln
+
+os:
+  - linux
+  - osx
+
+mono:
+  - latest
