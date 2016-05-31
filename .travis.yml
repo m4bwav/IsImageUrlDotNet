@@ -1,5 +1,2 @@
 language: csharp
-
-os:
-  - linux
-  - osx
+solution: IsImageUrlDotNet.sln
