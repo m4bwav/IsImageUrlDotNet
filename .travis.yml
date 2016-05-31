@@ -1,1 +1,5 @@
 language: fsharp
+
+os:
+  - linux
+  - osx
