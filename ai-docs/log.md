@@ -76,3 +76,8 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 - Rulesets from TrailerClipperLib's: `master` 24084842 (deletion, non_fast_forward, required check `ci`, admin bypass) and `Tags only by admins` 24084845 (templates/rulesets/tags-admins-only.json). `gh repo edit`: homepage, description, secret scanning, push protection, delete-branch-on-merge; private vulnerability reporting on; vulnerability alerts on (0 open); default workflow permissions read.
 - Dependabot #2 (global.json 10.0.100 to 10.0.401) green, squash-merged 7c31c6e. Pull request #3 (Version 2.0.0-beta.1, changelog section) green, squash-merged 06b4aa4; ci run 36349282496 on master green.
 - Tag v2.0.0-beta.1 (annotated, 06b4aa4) pushed; GitHub reported "Bypassed rule violations ... creations being restricted" (the admin bypass of the tag ruleset). Release run 36349426955: build, test on Windows, attest passed; push job waiting at environment `nuget`.
+
+## [2026-09-27] add | Phase 5: 2.0.0-beta.1 released and verified
+- Mark approved release run 36349426955: push job and GitHub Release succeeded; GitHub prerelease v2.0.0-beta.1 with the nupkg and snupkg.
+- verify-published run 36349972948 green on ubuntu-24.04, windows-latest and macos-latest: both nuget.org indexes list 2.0.0-beta.1, signature type Repository, fresh C# and F# consumers answer as expected (net10.0 everywhere, net48 on Windows).
+- Phase 6 started: pull request for Version 2.0.0 and the dated changelog heading.

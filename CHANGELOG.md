@@ -8,7 +8,7 @@ All notable changes to IsImageUrlDotNet. The format follows [Keep a Changelog](h
 
 The release rehearsal of 2.0.0: the same code and package as described under 2.0.0 below, published as a prerelease to prove the release path (Trusted Publishing, the approval gate, verification from nuget.org).
 
-## [2.0.0]
+## [2.0.0] - 2026-09-27
 
 **Compatibility promise.** `IsImageUrlDotNetLib.IsImageUrl` and the lists `ImageFileExtensions` and `NonImageFileExtensions` give 1.0.2's answers, with the same requests, on each runtime a caller can have. The check covers every case recorded from the published 1.0.2 on .NET Framework 4.8 (Windows) and on .NET 10 (Windows, Linux and macOS), 117 cases per runtime in `tests/Golden/`. There are no exceptions. The namespace, module, parameter name `opt` and the C# extension form `url.IsImageUrl()` stay as they were. Every fix is under a new name, in the new `ImageUrl` type.
 
