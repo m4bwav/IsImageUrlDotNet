@@ -34,6 +34,8 @@ let private normalize (ctx: Context) (s: string) =
         .Replace(work.Replace(char 92, '/'), "<work>")
         .Replace(cwd, "<cwd>")
         .Replace(":" + port, ":<port>")
+        .Replace(String('a', 70000), "<a x 70000>")
+        .Replace(String('a', 300), "<a x 300>")
 
 let rec private describe (ctx: Context) (e: exn) =
     let fields =
