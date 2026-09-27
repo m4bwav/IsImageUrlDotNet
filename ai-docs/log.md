@@ -70,3 +70,9 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-09-27] handoff | Stopped at the pull request review
 - Pull request #1 updated (body, review comment https://github.com/m4bwav/IsImageUrlDotNet/pull/1#issuecomment-5859274743); HANDOFF.md rewritten.
 - Lessons by pull request: m4bwav/package-modernize#2 (C-20260927-11, L-070 to L-076, scripts/make-icon.py); overlay m4bwav/package-modernization#2 (kickoff status and corrections, inventory row, icon standing decision).
+
+## [2026-09-27] add | Phase 4 and the Phase 5 stop
+- Mark merged pull request #1 (merge commit e9e1eb7, 2026-09-27T20:08:58Z; ci on master green) and the two lesson pull requests were merged (package-modernize 466a9fa, package-modernization 05c7d64). Mark: ignore the Travis webhook.
+- Rulesets from TrailerClipperLib's: `master` 24084842 (deletion, non_fast_forward, required check `ci`, admin bypass) and `Tags only by admins` 24084845 (templates/rulesets/tags-admins-only.json). `gh repo edit`: homepage, description, secret scanning, push protection, delete-branch-on-merge; private vulnerability reporting on; vulnerability alerts on (0 open); default workflow permissions read.
+- Dependabot #2 (global.json 10.0.100 to 10.0.401) green, squash-merged 7c31c6e. Pull request #3 (Version 2.0.0-beta.1, changelog section) green, squash-merged 06b4aa4; ci run 36349282496 on master green.
+- Tag v2.0.0-beta.1 (annotated, 06b4aa4) pushed; GitHub reported "Bypassed rule violations ... creations being restricted" (the admin bypass of the tag ruleset). Release run 36349426955: build, test on Windows, attest passed; push job waiting at environment `nuget`.
