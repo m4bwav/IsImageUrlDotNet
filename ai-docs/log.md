@@ -81,3 +81,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 - Mark approved release run 36349426955: push job and GitHub Release succeeded; GitHub prerelease v2.0.0-beta.1 with the nupkg and snupkg.
 - verify-published run 36349972948 green on ubuntu-24.04, windows-latest and macos-latest: both nuget.org indexes list 2.0.0-beta.1, signature type Repository, fresh C# and F# consumers answer as expected (net10.0 everywhere, net48 on Windows).
 - Phase 6 started: pull request for Version 2.0.0 and the dated changelog heading.
+
+## [2026-09-27] add | Phase 6: 2.0.0 tagged, waiting for approval
+- Pull request #5 (Version 2.0.0, changelog heading dated 2026-09-27) green, squash-merged 9e51d05; ci run 36350423737 on master green; tag v2.0.0 pushed; release run 36350568172 waiting at environment `nuget` after build, Windows tests and attestation passed.
