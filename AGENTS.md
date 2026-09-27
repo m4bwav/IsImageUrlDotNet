@@ -6,7 +6,7 @@ Rules for any AI agent (Claude Code, Copilot, Cursor, Codex) working in this rep
 
 The NuGet package `IsImageUrlDotNet` (namespace `IsImageUrlDotNet`, module `IsImageUrlDotNetLib`, written in F#): tells whether a string is a URL of an image, by its file extension first and otherwise by the Content-Type of a GET. 1.0.2 (2016-06-05, an F# `lib/net45` DLL with an undeclared FSharp.Core 4.4.0.0 dependency) is the published version until 2.0.0 ships. The run follows the package-modernize skill (m4bwav/package-modernize); the plan is `ai-docs/plans/2026-09-27-modernization-and-v2-release.md`; start with `ai-docs/HANDOFF.md`.
 
-State on 2026-09-27: 2.0.0 written on branch `v2` (Phase 2 and 3; pull request open), not released. The library keeps 1.0.2's `IsImageUrl` statement for statement and adds the `ImageUrl` type.
+State on 2026-09-27: 2.0.0 released (nuget.org, verified). Start with `ai-docs/HANDOFF.md` for standing work. The library keeps 1.0.2's `IsImageUrl` statement for statement and adds the `ImageUrl` type.
 
 ## Rules
 
