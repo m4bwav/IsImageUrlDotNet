@@ -90,3 +90,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 - verify-published run 36352902029 green on ubuntu-24.04, windows-latest and macos-latest. nuget.org flat container: 1.0.0, 1.0.2, 2.0.0-beta.1, 2.0.0; search: 2.0.0 with iconUrl. check-readme-images on the README inside the published 2.0.0 nupkg (`--registry nuget`): 3 images, every image works.
 - Phase 7: `PackageValidationBaselineVersion` 2.0.0 (locked restore, build and pack clean against the published package); HANDOFF rewritten around standing work; plan completed. Mark still owes the 1.x deprecation (UI) and an answer on `scratch/golden-capture-1.0.2`.
 ## [2026-09-27] index | rebuilt (4 entries)
+
+## [2026-09-27] update | 1.x deprecated
+- Registration index (catalog 2026.09.27.22.10.51): 1.0.0 and 1.0.2 deprecated, reasons ["Legacy"], message "1.x targets .NET Framework 4.5 and does not declare its FSharp.Core dependency; use 2.x"; no alternatePackage. 2.0.0-beta.1 and 2.0.0 not deprecated. An earlier read a few minutes after Mark saved showed no deprecation (index lag).
