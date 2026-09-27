@@ -66,3 +66,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 - Ionide's IONIDE-006 flagged `answer.Value` in the new redirect loop; replaced with `Option.defaultValue false answer`; analyzers exit 0.
 - `git diff --exit-code 00c5355 -- tests/Golden`: empty.
 ## [2026-09-27] index | rebuilt (4 entries)
+
+## [2026-09-27] handoff | Stopped at the pull request review
+- Pull request #1 updated (body, review comment https://github.com/m4bwav/IsImageUrlDotNet/pull/1#issuecomment-5859274743); HANDOFF.md rewritten.
+- Lessons by pull request: m4bwav/package-modernize#2 (C-20260927-11, L-070 to L-076, scripts/make-icon.py); overlay m4bwav/package-modernization#2 (kickoff status and corrections, inventory row, icon standing decision).
