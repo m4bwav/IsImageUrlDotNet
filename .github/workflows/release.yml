@@ -1,8 +1,8 @@
-# A tag v<version> builds and tests the package, attests it, then waits at the `nuget` environment for the
-# maintainer's approval (Review deployments on the run); only then is it pushed to nuget.org, and the GitHub Release
-# is created. Tag only after ci is green on master. No API key is stored anywhere: NuGet/login trades the publish job's
-# OIDC token for a one-hour key, under the Trusted Publishing policy on nuget.org that names this file, release.yml,
-# and the environment `nuget`. Renaming either breaks publishing.
+# A tag v<version> on a master commit builds and tests the package (Linux, and Windows with net48), attests it, then
+# waits at the `nuget` environment for the maintainer's approval (Review deployments on the run); only then is it pushed
+# to nuget.org, and the GitHub Release is created. Tag only after ci is green on master. No API key is stored anywhere:
+# NuGet/login trades the publish job's OIDC token for a one-hour key, under the Trusted Publishing policy on nuget.org
+# that names this file, release.yml, and the environment `nuget`. Renaming either breaks publishing.
 name: release
 
 on:
@@ -48,6 +48,13 @@ jobs:
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
           if [[ "$version" == *-* ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
+      - name: The tagged commit is on master
+        run: |
+          git fetch --no-tags origin master
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" FETCH_HEAD; then
+            echo "::error::$GITHUB_SHA is not on master; tag only commits on master, after ci is green"
+            exit 1
+          fi
       - name: Release notes from the changelog
         env:
           VERSION: ${{ steps.version.outputs.version }}
@@ -80,6 +87,22 @@ jobs:
             release-notes.md
           if-no-files-found: error
 
+  test-windows:
+    name: test on Windows (net48 and net10.0)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - run: dotnet restore --locked-mode
+      - run: dotnet build --no-restore -c Release
+      - run: dotnet test --no-build -c Release -f net48
+      - run: dotnet test --no-build -c Release -f net10.0
+
   attest:
     name: attest the package
     needs: build
@@ -99,7 +122,7 @@ jobs:
 
   publish:
     name: push to nuget.org (after approval)
-    needs: [build, attest]
+    needs: [build, test-windows, attest]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     # The human gate: the run waits here until the maintainer approves the `nuget` environment.

@@ -39,6 +39,14 @@ open IsImageUrlDotNet
 [<TestCase(" ", false)>]
 [<TestCase(null, false)>]
 [<TestCase("file:///tmp/a.png", false)>]
+[<TestCase("//cdn.test/a.png", true)>]
+[<TestCase("//cdn.test/a.pdf", false)>]
+[<TestCase("/images/a.png", true)>]
+[<TestCase("/images/a.png?x=1", true)>]
+[<TestCase("images\\a.png", true)>]
+[<TestCase("C:\\temp\\x.png", false)>]
+[<TestCase("Http://fixture.test/a.PNG", true)>]
+[<TestCase("localhost:8080/a.png", false)>]
 [<TestCase("ftp://fixture.test/a.png", false)>]
 [<TestCase("data:image/png;base64,iVBORw0KGgo=", false)>]
 [<TestCase("mailto:a@fixture.test", false)>]
@@ -59,6 +67,14 @@ let ``HasImageExtension ignores the culture`` () =
         Assert.That(ImageUrl.HasImageExtension "x.TIF", Is.True)
     finally
         thread.CurrentCulture <- old
+
+[<Test>]
+let ``HasImageExtension is false for other schemes even when Uri cannot parse them`` () =
+    // Past the Uri length limit .NET Framework cannot parse these; the answer must not fall back to reading a path.
+    let long = String('a', 70000)
+    Assert.That(ImageUrl.HasImageExtension("ftp://h.test/" + long + ".png"), Is.False)
+    Assert.That(ImageUrl.HasImageExtension("file:///" + long + ".png"), Is.False)
+    Assert.That(ImageUrl.HasImageExtension("http://h.test/" + long + ".png"), Is.True)
 
 [<Test>]
 let ``HasImageExtension never throws on long or odd input`` () =
@@ -83,13 +99,19 @@ let ``ImageExtensions holds the old eight and the new eight, read-only`` () =
     | _ -> ()
 
 /// A fixture server plus a client whose proxy is that server.
-type private Fixture() =
+type private Fixture(autoRedirect: bool) =
     let server = new Golden.FixtureServer.Server()
 
     let handler =
-        new HttpClientHandler(Proxy = WebProxy(sprintf "http://127.0.0.1:%d" server.Port), UseProxy = true)
+        new HttpClientHandler(
+            Proxy = WebProxy(sprintf "http://127.0.0.1:%d" server.Port),
+            UseProxy = true,
+            AllowAutoRedirect = autoRedirect
+        )
+
 
     let client = new HttpClient(handler, Timeout = TimeSpan.FromSeconds 10.0)
+    new() = new Fixture(true)
     member _.Client = client
     member _.Requests() = server.Take()
 
@@ -97,6 +119,50 @@ type private Fixture() =
         member _.Dispose() =
             client.Dispose()
             (server :> IDisposable).Dispose()
+
+/// A proxy that answers every request with the same raw response, and counts the connections it accepted.
+type private OneAnswer(response: string) =
+    let listener = new TcpListener(IPAddress.Loopback, 0)
+    let mutable count = 0
+
+    let rec loop () =
+        try
+            use client = listener.AcceptTcpClient()
+            Interlocked.Increment(&count) |> ignore
+            use stream = client.GetStream()
+            let buffer = Array.zeroCreate<byte> 4096
+            stream.Read(buffer, 0, buffer.Length) |> ignore
+            let bytes = Text.Encoding.ASCII.GetBytes response
+            stream.Write(bytes, 0, bytes.Length)
+            loop ()
+        with _ ->
+            ()
+
+    do
+        listener.Start()
+        Thread(loop, IsBackground = true).Start()
+
+    member _.Port = (listener.LocalEndpoint :?> IPEndPoint).Port
+    member _.Count = count
+
+    interface IDisposable with
+        member _.Dispose() = listener.Stop()
+
+let private redirectTo (location: string) =
+    "HTTP/1.1 302 Found"
+    + "\r\nLocation: "
+    + location
+    + "\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+
+let private clientVia (port: int) (autoRedirect: bool) =
+    let handler =
+        new HttpClientHandler(
+            Proxy = WebProxy(sprintf "http://127.0.0.1:%d" port),
+            UseProxy = true,
+            AllowAutoRedirect = autoRedirect
+        )
+
+    new HttpClient(handler, Timeout = TimeSpan.FromSeconds 10.0)
 
 let private ask (fixture: Fixture) (url: string) =
     ImageUrl.IsImageUrlAsync(url, fixture.Client).GetAwaiter().GetResult()
@@ -232,3 +298,55 @@ let ``IsImageUrlAsync with the shared client decides by extension without a requ
     Assert.That(ImageUrl.IsImageUrlAsync("mailto:x@fixture.test").GetAwaiter().GetResult(), Is.False)
 
     Assert.That(ImageUrl.IsImageUrlAsync("file:///x.gif", CancellationToken.None).GetAwaiter().GetResult(), Is.False)
+
+[<TestCase("redirect-image", true, 2)>]
+[<TestCase("redirect-other-host", true, 2)>]
+[<TestCase("redirect-relative", true, 2)>]
+[<TestCase("redirect-html", false, 2)>]
+[<TestCase("redirect-no-location", false, 1)>]
+[<TestCase("redirect-loop", false, 11)>]
+let ``IsImageUrlAsync follows redirects itself when the client does not``
+    (path: string, expected: bool, requests: int)
+    =
+    use fixture = new Fixture(false)
+    Assert.That(ask fixture ("http://fixture.test/" + path), Is.EqualTo expected)
+    Assert.That(fixture.Requests().Length, Is.EqualTo requests)
+
+[<TestCase("file:///C:/Windows/win.ini")>]
+[<TestCase("ftp://127.0.0.1:1/a")>]
+[<TestCase("mailto:a@fixture.test")>]
+[<TestCase("javascript:alert(1)")>]
+let ``A redirect to a scheme other than http or https answers false and is not fetched`` (location: string) =
+    use server = new OneAnswer(redirectTo location)
+    use client = clientVia server.Port false
+
+    let answer =
+        ImageUrl.IsImageUrlAsync("http://fixture.test/x", client).GetAwaiter().GetResult()
+
+    Assert.That(answer, Is.False)
+    Assert.That(server.Count, Is.EqualTo 1, "only the first request; the redirect is not fetched")
+
+// Not mailto: here: .NET 10's own handler follows it as if it were http (to fixture.test:25) and fails at the name
+// lookup, an HttpRequestException. That is the caller's handler's rule, which the README describes.
+[<TestCase("file:///C:/Windows/win.ini")>]
+let ``A caller's client that follows a redirect to another scheme itself still gets false`` (location: string) =
+    // No proxy: the client talks to the loopback server directly and follows the Location on its own. On .NET 10 the
+    // handler throws UriFormatException for file: (the review's case); on .NET Framework it returns the 302.
+    use server = new OneAnswer(redirectTo location)
+    use handler = new HttpClientHandler(UseProxy = false)
+    use client = new HttpClient(handler, Timeout = TimeSpan.FromSeconds 10.0)
+
+    let answer =
+        ImageUrl.IsImageUrlAsync(sprintf "http://127.0.0.1:%d/x" server.Port, client).GetAwaiter().GetResult()
+
+    Assert.That(answer, Is.False)
+
+[<Test>]
+let ``A redirect from http to https is followed`` () =
+    // The fixture refuses CONNECT, so following it shows as HttpRequestException rather than false.
+    use fixture = new Fixture(false)
+
+    Assert.That(
+        TestDelegate(fun () -> ask fixture "http://fixture.test/redirect-https" |> ignore),
+        Throws.InstanceOf<HttpRequestException>()
+    )

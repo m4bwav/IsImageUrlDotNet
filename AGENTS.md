@@ -32,7 +32,7 @@ dotnet build -c Release                    # warnings are errors
 # F# analyzers (G-Research 0.25.0, Ionide 0.19.0), as ci.yml runs them; IsImageUrl.fs excluded (1.0.2's code):
 dotnet fsharp-analyzers --project src/IsImageUrlDotNet/IsImageUrlDotNet.fsproj --analyzers-path <global-packages>/g-research.fsharp.analyzers/0.25.0/analyzers/dotnet/fs --analyzers-path <global-packages>/ionide.analyzers/0.19.0/analyzers/dotnet/fs --treat-as-error '*' --exclude-files '**/IsImageUrl.fs'
 dotnet test --no-build -c Release -f net10.0
-dotnet test --no-build -c Release -f net48 # Windows only; runs the netstandard2.0 build
+dotnet test --no-build -c Release -f net48 # Windows only; runs the net462 build
 dotnet pack src/IsImageUrlDotNet --no-build -c Release -o artifacts
 ```
 
@@ -41,7 +41,8 @@ The capture (run only to add a recording for a new runtime, never over a committ
 ## Layout and traps
 
 - `src/IsImageUrlDotNet/`: `IsImageUrl.fs` (1.0.2's module, kept exactly; `#nowarn "44"` for WebRequest) and `ImageUrl.fs` (the new API). FSharp.Core pinned at 6.0.7, the declared floor: never raise it for tidiness, and Dependabot ignores it.
-- `tests/IsImageUrlDotNet.Tests/` (F#, NUnit): `GoldenTests.fs` compiles the capture's `Json.fs`, `FixtureServer.fs` and `Cases.fs` by link, runs them against the new build and compares each case as JSON text with `tests/Golden/1.0.2.<runtime>-<os>.json`; the one exception table is in that file. `PublicApiTests.fs` checks every line of `PublicApi-1.0.2.txt` (written by `PublicApi.fs` from the published DLL). `ImageUrlTests.fs` tests the new API against the fixture server.
+- `tests/IsImageUrlDotNet.GoldenTests/` (F#, NUnit, the golden test alone): `GoldenTests.fs` compiles the capture's `Json.fs`, `FixtureServer.fs` and `Cases.fs` by link, runs them against the new build and compares each case as JSON text with `tests/Golden/1.0.2.<runtime>-<os>.json`; the one exception table is in that file. It is its own project so it runs in a fresh process, as the capture did: on .NET Framework, 1.0.2's request heads after the dropped-connection case changed when other network tests had run earlier in the same process. Never add tests to it.
+- `tests/IsImageUrlDotNet.Tests/` (F#, NUnit): `PublicApiTests.fs` checks every line of `PublicApi-1.0.2.txt` (written by `PublicApi.fs` from the published DLL); `ImageUrlTests.fs` tests the new API against the fixture server and small one-answer servers.
 - `tests/IsImageUrlDotNet.CSharpTests/` (C#): the extension forms, and FSharp.Core arriving only through the package's dependency.
 - `tests/Golden/Capture/`: the frozen capture program (in `.fantomasignore`). Its empty `Directory.Build.*` and `Directory.Packages.props` stop it from inheriting the repository's MSBuild files.
 - The golden test sets the ambient culture from the recording (en-US on Windows, invariant on Linux and macOS) and English UI messages, as the capture did.

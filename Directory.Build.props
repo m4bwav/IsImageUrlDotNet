@@ -23,6 +23,8 @@
        Warnings 1182 (unused values) and 3390 (malformed XML doc) are off by default; turn them on. -->
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.fsproj'">
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    <!-- F# adds System.ValueTuple to .NET Framework builds by default; nothing here uses struct tuples. -->
+    <DisableImplicitSystemValueTupleReference>true</DisableImplicitSystemValueTupleReference>
     <OtherFlags>$(OtherFlags) --warnon:1182,3390</OtherFlags>
   </PropertyGroup>
 

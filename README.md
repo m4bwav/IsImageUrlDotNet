@@ -4,7 +4,7 @@
 [![ci](https://github.com/m4bwav/IsImageUrlDotNet/actions/workflows/ci.yml/badge.svg)](https://github.com/m4bwav/IsImageUrlDotNet/actions/workflows/ci.yml)
 [![Downloads](https://img.shields.io/nuget/dt/IsImageUrlDotNet)](https://www.nuget.org/packages/IsImageUrlDotNet)
 
-Tells whether a URL points at an image. Ask offline, from the extension of the URL's path, or ask the server for the media type it answers with. Written in F#; works the same from C# and F#. Builds for netstandard2.0 and net10.0, so it runs on .NET Framework 4.6.2 and later and on every current .NET, on Windows, macOS and Linux.
+Tells whether a URL points at an image. Ask offline, from the extension of the URL's path, or ask the server for the media type it answers with. Written in F#; works the same from C# and F#. Builds for net10.0, net462 and netstandard2.0, so it runs on .NET Framework 4.6.2 and later, on every current .NET and on other .NET Standard 2.0 platforms, on Windows, macOS and Linux.
 
 ```
 dotnet add package IsImageUrlDotNet
@@ -37,8 +37,8 @@ let! isImage = ImageUrl.IsImageUrlAsync("https://example.com/avatar")    // insi
 
 | Member | What it does |
 |---|---|
-| `ImageUrl.HasImageExtension(url)` | True when the path of the URL ends in an image extension (`ImageUrl.ImageExtensions`), without regard to case or culture. The query and fragment are ignored. Offline; never throws; false for null, blank, and absolute URLs that are not http or https. A relative string such as `photos/cat.png?w=1` is read as a path. |
-| `ImageUrl.IsImageUrlAsync(url)` and overloads with an `HttpClient` and a `CancellationToken` | For http and https URLs only: true when the extension is an image one; otherwise sends a GET, reads only the response headers, and answers true for a 2xx status with an `image/*` media type. False for other schemes, malformed URLs, other statuses and other media types. Throws `HttpRequestException` when the server cannot be reached, `TaskCanceledException` on timeout or cancellation, and `ArgumentNullException` for a null `HttpClient`. Without a client of yours it uses one shared `HttpClient` with a 10-second timeout. |
+| `ImageUrl.HasImageExtension(url)` | True when the path of the URL ends in an image extension (`ImageUrl.ImageExtensions`), without regard to case or culture. The query and fragment are ignored. Offline; never throws. False for null, blank, and any string with a scheme other than http or https (`file:`, `ftp:`, `data:`, `C:\...`). A protocol-relative `//cdn.example/a.png` is read as http; anything else, such as `photos/cat.png?w=1` or `/images/a.png`, is read as a path, with the same answer on every OS. |
+| `ImageUrl.IsImageUrlAsync(url)` and overloads with an `HttpClient` and a `CancellationToken` | For http and https URLs only: true when the extension is an image one; otherwise sends a GET, reads only the response headers, and answers true for a 2xx status with an `image/*` media type. It follows up to 10 redirects itself, http and https only and never from https to http; a redirect anywhere else answers false. False for other schemes, malformed URLs, other statuses and other media types. Throws `HttpRequestException` when the server cannot be reached, `TaskCanceledException` on timeout or cancellation, and `ArgumentNullException` for a null `HttpClient`. Without a client of yours it uses one shared `HttpClient` with a 10-second timeout and a User-Agent naming this package. |
 | `ImageUrl.ImageExtensions` | The 16 extensions `HasImageExtension` accepts: png, jpg, jpeg, gif, raw, bmp, svg, psd, webp, avif, apng, ico, tif, tiff, heic, heif. |
 | `IsImageUrlDotNetLib.IsImageUrl(url)`, `url.IsImageUrl()` | **Obsolete; kept exactly as 1.0.2 had it.** See below. |
 | `IsImageUrlDotNetLib.ImageFileExtensions`, `NonImageFileExtensions` | 1.0.2's two F# lists, eight values each, unchanged. |
@@ -59,7 +59,8 @@ Use `HasImageExtension` where 1.x was used as an offline check, and `IsImageUrlA
 ## Limits and what this package is not
 
 - The extension check is a guess from the name. The server check trusts the server's `Content-Type` header and never looks at the bytes.
-- `IsImageUrlAsync` fetches whatever http or https URL it is given, following redirects. That is not protection against server-side request forgery. A service that checks URLs from untrusted users should pass its own `HttpClient`, whose handler refuses private and loopback addresses. Never pass such URLs to the obsolete `IsImageUrl`, which also reads local files.
+- `IsImageUrlAsync` fetches whatever http or https URL it is given, following redirects. That is not protection against server-side request forgery. A service that checks URLs from untrusted users should pass its own `HttpClient` whose handler refuses private and loopback addresses and has `AllowAutoRedirect = false`. A handler that follows redirects applies its own rules: on .NET 5 and later it follows a `Location` with another scheme, such as `ftp://host:21/`, as if it were http. With automatic redirects off, `IsImageUrlAsync` follows them itself under the rules above. Never pass such URLs to the obsolete `IsImageUrl`, which also reads local files.
+- From C#, `url.IsImageUrlAsync(default)` does not compile: it is ambiguous between the `HttpClient` and the `CancellationToken` overloads. Pass `CancellationToken.None` or a client.
 - It does not download images, validate them, or read their dimensions.
 
 ## Contributing and support

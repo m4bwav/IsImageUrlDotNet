@@ -1,7 +1,7 @@
 /// The golden test: runs the capture's own Cases.fs against the new build and compares every case, as JSON text, with
 /// the recording of the published 1.0.2 for this runtime and OS (tests/Golden/1.0.2.<runtime>-<os>.json).
 /// The recordings never change. When a case differs, fix src/; never edit a recording.
-module IsImageUrlDotNet.Tests.GoldenTests
+module IsImageUrlDotNet.GoldenTests.GoldenTests
 
 open System
 open System.Globalization

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net462;net10.0</TargetFrameworks>
     <RootNamespace>IsImageUrlDotNet</RootNamespace>
     <AssemblyName>IsImageUrlDotNet</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -43,11 +43,31 @@
     <PackageReference Include="FSharp.Core" Version="6.0.7" />
   </ItemGroup>
 
+  <!-- .NET Framework: ImageUrl's API exposes HttpClient, which lives in System.Net.Http, an assembly a .NET Framework
+       project does not reference by default. With the netstandard2.0 build alone an F# net48 consumer failed to compile
+       even the 1.0.2 call (FS1108, then FS0039); this build makes the package add the reference for the consumer. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+    <Reference Include="System.Net.Http" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
   <ItemGroup>
     <!-- F# analyzers, run by the fsharp-analyzers tool in CI (dotnet-tools.json); downloaded only, never referenced,
          so they are not in the package. The tool must match the SDK's compiler: bump them together. -->
     <PackageDownload Include="G-Research.FSharp.Analyzers" Version="[0.25.0]" />
     <PackageDownload Include="Ionide.Analyzers" Version="[0.19.0]" />
   </ItemGroup>
+
+  <!-- The nuspec needs <frameworkAssembly assemblyName="System.Net.Http" targetFramework=".NETFramework4.6.2" /> so a
+       .NET Framework consumer references System.Net.Http. Pack writes one only for references resolved from the target
+       framework directory, and the SDK resolves this one from its own net461 copy, so add it here. ci.yml checks the
+       nuspec and builds C# and F# net48 consumers from the packed package. -->
+  <Target Name="PackSystemNetHttpFrameworkAssembly" BeforeTargets="_GetFrameworkAssemblyReferences" Condition="'$(TargetFramework)' == 'net462'">
+    <ItemGroup>
+      <TfmSpecificFrameworkAssemblyReferences Include="System.Net.Http">
+        <TargetFramework>$(TargetFramework)</TargetFramework>
+      </TfmSpecificFrameworkAssemblyReferences>
+    </ItemGroup>
+  </Target>
 
 </Project>
