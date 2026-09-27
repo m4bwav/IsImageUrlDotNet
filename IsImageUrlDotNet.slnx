@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/IsImageUrlDotNet/IsImageUrlDotNet.fsproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/IsImageUrlDotNet.CSharpTests/IsImageUrlDotNet.CSharpTests.csproj" />
+    <Project Path="tests/IsImageUrlDotNet.Tests/IsImageUrlDotNet.Tests.fsproj" />
+  </Folder>
+</Solution>

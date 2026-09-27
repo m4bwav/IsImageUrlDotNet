@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <RootNamespace>IsImageUrlDotNet</RootNamespace>
+    <AssemblyName>IsImageUrlDotNet</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <PackageId>IsImageUrlDotNet</PackageId>
+    <Version>2.0.0</Version>
+    <Authors>Mark Rogers</Authors>
+    <Copyright>Copyright (c) 2016-2026 Mark Rogers</Copyright>
+    <Title>IsImageUrlDotNet</Title>
+    <Description>Tells whether a URL points at an image: offline by the extension of its path (url.HasImageExtension()), or by asking the server for its media type (await url.IsImageUrlAsync()). Keeps 1.0.2's url.IsImageUrl() with its exact answers. Written in F#; works from C# and F#.</Description>
+    <PackageTags>image url uri content-type extension fsharp csharp</PackageTags>
+    <PackageProjectUrl>https://github.com/m4bwav/IsImageUrlDotNet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/m4bwav/IsImageUrlDotNet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReleaseNotes>See https://github.com/m4bwav/IsImageUrlDotNet/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <IsPackable>true</IsPackable>
+    <!-- Compares the two target frameworks' APIs at pack time. 1.0.2 (net45 only) cannot be a baseline; after the
+         2.0.0 release, set PackageValidationBaselineVersion to 2.0.0. -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="IsImageUrl.fs" />
+    <Compile Include="ImageUrl.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../icon.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The lowest FSharp.Core the code needs (task { } arrived in 6.0); the package declares it as its dependency. -->
+    <PackageReference Include="FSharp.Core" Version="6.0.7" />
+  </ItemGroup>
+
+</Project>

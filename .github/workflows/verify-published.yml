@@ -1,0 +1,113 @@
+# Run by hand after a release is approved: proves the published package from nuget.org itself, not from this
+# repository. On Linux, macOS and Windows: waits until nuget.org lists the version in both indexes, checks the
+# repository signature, and builds fresh C# and F# consumers (net10.0 everywhere, net48 on Windows) that restore the
+# exact version from nuget.org and answer offline cases. Nothing here makes a request to the internet except nuget.org.
+name: verify-published
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The version to verify, such as 2.0.0
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verify:
+    name: verify ${{ inputs.version }} (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+      - name: nuget.org lists the version in both indexes (they can lag about 15 to 25 minutes)
+        run: |
+          for attempt in $(seq 1 40); do
+            # The flat container (downloads) updates first; the registration index, which restores read, can lag.
+            if curl -fsS "https://api.nuget.org/v3-flatcontainer/isimageurldotnet/index.json" | grep -q "\"$VERSION\"" \
+              && curl -fsS --compressed "https://api.nuget.org/v3/registration5-gz-semver2/isimageurldotnet/index.json" | grep -q "\"version\":\"$VERSION\""; then
+              echo "IsImageUrlDotNet $VERSION listed"
+              exit 0
+            fi
+            sleep 30
+          done
+          echo "::error::IsImageUrlDotNet $VERSION is not on nuget.org"
+          exit 1
+      - name: The downloaded package carries nuget.org's repository signature
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/p.nupkg" "https://api.nuget.org/v3-flatcontainer/isimageurldotnet/$VERSION/isimageurldotnet.$VERSION.nupkg"
+          dotnet nuget verify "$RUNNER_TEMP/p.nupkg" --all
+      - name: Fresh C# and F# consumers restore the published package and answer
+        run: |
+          frameworks="net10.0"
+          if [ "$RUNNER_OS" = Windows ]; then frameworks="net10.0 net48"; fi
+          for tfm in $frameworks; do
+            cs="$RUNNER_TEMP/cs-$tfm"
+            mkdir -p "$cs"
+            cat > "$cs/Consumer.csproj" <<EOF
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>$tfm</TargetFramework><LangVersion>latest</LangVersion><NoWarn>CS0618</NoWarn></PropertyGroup>
+            <ItemGroup>
+              <PackageReference Include="IsImageUrlDotNet" Version="[$VERSION]" />
+              <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+            </ItemGroup>
+          </Project>
+          EOF
+            cat > "$cs/Program.cs" <<'EOF'
+          using System;
+          using IsImageUrlDotNet;
+
+          class Program
+          {
+              static int Main()
+              {
+                  var ok = "http://example.test/a.png".IsImageUrl()
+                      && !"x.pdf".IsImageUrl()
+                      && "http://example.test/a.png?w=1".HasImageExtension()
+                      && !ImageUrl.IsImageUrlAsync("mailto:a@example.test").GetAwaiter().GetResult();
+                  Console.WriteLine(ok ? "C# consumer answers as expected" : "wrong answer");
+                  return ok ? 0 : 1;
+              }
+          }
+          EOF
+            (cd "$cs" && dotnet run -c Release)
+
+            fs="$RUNNER_TEMP/fs-$tfm"
+            mkdir -p "$fs"
+            cat > "$fs/Consumer.fsproj" <<EOF
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>$tfm</TargetFramework><NoWarn>44</NoWarn></PropertyGroup>
+            <ItemGroup><Compile Include="Program.fs" /></ItemGroup>
+            <ItemGroup>
+              <PackageReference Include="IsImageUrlDotNet" Version="[$VERSION]" />
+              <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+            </ItemGroup>
+          </Project>
+          EOF
+            cat > "$fs/Program.fs" <<'EOF'
+          open IsImageUrlDotNet
+
+          let ok =
+              IsImageUrlDotNetLib.IsImageUrl "http://example.test/a.png"
+              && ImageUrl.HasImageExtension "photo.webp"
+              && not (ImageUrl.HasImageExtension "x.pdf")
+
+          printfn "%s" (if ok then "F# consumer answers as expected" else "wrong answer")
+          exit (if ok then 0 else 1)
+          EOF
+            (cd "$fs" && dotnet run -c Release)
+          done

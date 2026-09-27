@@ -1,0 +1,33 @@
+# Weekly update pull requests. Merge when CI is green; read the release notes before merging a major.
+# The actions are pinned to commit SHAs with the version in a comment; Dependabot updates both.
+# The three-day cooldown keeps brand-new releases out until they have had time to be pulled if bad.
+# FSharp.Core in the library is the package's declared floor, not a version to chase: ignored here (see AGENTS.md).
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 3
+    ignore:
+      - dependency-name: FSharp.Core
+    groups:
+      test-packages:
+        patterns:
+          - "NUnit*"
+          - "Microsoft.NET.Test.Sdk"
+  # Updates the SDK version in global.json.
+  - package-ecosystem: dotnet-sdk
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 3

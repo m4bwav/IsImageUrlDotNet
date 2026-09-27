@@ -6,7 +6,7 @@ Rules for any AI agent (Claude Code, Copilot, Cursor, Codex) working in this rep
 
 The NuGet package `IsImageUrlDotNet` (namespace `IsImageUrlDotNet`, module `IsImageUrlDotNetLib`, written in F#): tells whether a string is a URL of an image, by its file extension first and otherwise by the Content-Type of a GET. 1.0.2 (2016-06-05, an F# `lib/net45` DLL with an undeclared FSharp.Core 4.4.0.0 dependency) is the published version until 2.0.0 ships. The run follows the package-modernize skill (m4bwav/package-modernize); the plan is `ai-docs/plans/2026-09-27-modernization-and-v2-release.md`; start with `ai-docs/HANDOFF.md`.
 
-State on 2026-09-27: Phases 0 and 1 (survey, golden capture, plan). No new code yet; the 2016 projects are still in place and do not build on a current SDK.
+State on 2026-09-27: 2.0.0 written on branch `v2` (Phase 2 and 3; pull request open), not released. The library keeps 1.0.2's `IsImageUrl` statement for statement and adds the `ImageUrl` type.
 
 ## Rules
 
@@ -21,21 +21,33 @@ State on 2026-09-27: Phases 0 and 1 (survey, golden capture, plan). No new code 
 - **No AI attribution anywhere.**
 - **Line endings.** Files are LF.
 
-## Commands (Phase 0)
+## Commands
 
 ```
-cd tests/Golden/Capture
-dotnet build -c Release
-dotnet run -c Release -f net10.0 --no-build > /tmp/check.json   # never over the committed recordings
-mono bin/Release/net48/Capture.exe                              # the net48 build under Mono (Linux reference only)
+dotnet restore --locked-mode
+dotnet tool restore
+dotnet fantomas --check .                  # F# format; dotnet format skips F# and exits 0
+dotnet format tests/IsImageUrlDotNet.CSharpTests --no-restore --verify-no-changes
+dotnet build -c Release                    # warnings are errors
+dotnet test --no-build -c Release -f net10.0
+dotnet test --no-build -c Release -f net48 # Windows only; runs the netstandard2.0 build
+dotnet pack src/IsImageUrlDotNet --no-build -c Release -o artifacts
 ```
+
+The capture (run only to add a recording for a new runtime, never over a committed one): in `tests/Golden/Capture`, `dotnet build -c Release`, then `dotnet run -c Release -f net10.0 --no-build > <scratch>/x.json` twice, compared.
 
 ## Layout and traps
 
-- `IsImageUrlDotNet/` and `IsImageUrlDotNet.Test/`: the 2016 projects (old-style fsproj needing Visual Studio's F# targets; MSTest calling google.com). Replaced in Phase 2.
-- `tests/Golden/Capture/`: the capture program (F#). `Cases.fs` holds every case and is meant to be compiled unchanged by the golden test against the new library; `FixtureServer.fs` is the fixture server and proxy; `Json.fs` writes the recording. Its empty `Directory.Build.*` and `Directory.Packages.props` stop it from inheriting the repository's MSBuild files.
+- `src/IsImageUrlDotNet/`: `IsImageUrl.fs` (1.0.2's module, kept exactly; `#nowarn "44"` for WebRequest) and `ImageUrl.fs` (the new API). FSharp.Core pinned at 6.0.7, the declared floor: never raise it for tidiness, and Dependabot ignores it.
+- `tests/IsImageUrlDotNet.Tests/` (F#, NUnit): `GoldenTests.fs` compiles the capture's `Json.fs`, `FixtureServer.fs` and `Cases.fs` by link, runs them against the new build and compares each case as JSON text with `tests/Golden/1.0.2.<runtime>-<os>.json`; the one exception table is in that file. `PublicApiTests.fs` checks every line of `PublicApi-1.0.2.txt` (written by `PublicApi.fs` from the published DLL). `ImageUrlTests.fs` tests the new API against the fixture server.
+- `tests/IsImageUrlDotNet.CSharpTests/` (C#): the extension forms, and FSharp.Core arriving only through the package's dependency.
+- `tests/Golden/Capture/`: the frozen capture program (in `.fantomasignore`). Its empty `Directory.Build.*` and `Directory.Packages.props` stop it from inheriting the repository's MSBuild files.
+- The golden test sets the ambient culture from the recording (en-US on Windows, invariant on Linux and macOS) and English UI messages, as the capture did.
+- Windows recordings name drive `D:` in one case (`file:///nonexistent-isimageurl/file` resolves against the current drive); the exception table swaps in the current drive, so a clone on another drive passes.
+- A canary (a planted wrong line in `src/`) must be reverted with an edit, not `git checkout -- src/`, until the source is committed.
 - F# callers cannot use the C# extension form `url.IsImageUrl()`; F# reads the module signature. Test the extension form from C#.
-- FSharp.Core: the SDK's implicit reference follows the SDK's feature band (SDK 10.0.1xx gives 10.0.1xx, 10.0.4xx gives 10.1.4xx), so a library pins it.
+- F# nullness is on in the library (`string | null` parameters). FSharp.Core 6.0.7 has no `NonNull` pattern: narrow with `match x with | null -> ... | x -> ...`.
+- The Bash tool's heredocs halve backslashes: write F# with `\n` or `\\` through the editor tools, or build the character from `char 92`.
 
 ## ai-docs
 

@@ -1,0 +1,5 @@
+# Keep LF everywhere so Fantomas and dotnet format agree on every OS.
+* text=auto eol=lf
+*.png binary
+*.nupkg binary
+*.snupkg binary
