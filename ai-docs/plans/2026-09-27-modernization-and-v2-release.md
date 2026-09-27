@@ -127,7 +127,7 @@ From C#: `url.IsImageUrl()` (unchanged), `url.HasImageExtension()`, `await url.I
 ### Phase 4: CI, settings, merge, cleanup
 - [x] CI green (36345678841); merged by Mark as merge commit e9e1eb7 (2026-09-27T20:08:58Z; the rulesets came after the merge, not before); D16 settings applied; Travis webhook kept (Mark: ignore it); scratch branch still waiting for an OK
 ### Phase 5: release rehearsal
-- [ ] Mark has added the Trusted Publishing policy (D13, done). `v2.0.0-beta.1` tagged on 06b4aa4 after ci 36349282496; release run 36349426955 waits for the approval (**stop**); verify-published run id
+- [x] Mark has added the Trusted Publishing policy (D13). `v2.0.0-beta.1` tagged on 06b4aa4 after ci 36349282496; release run 36349426955 approved and green; verify-published run 36349972948 green on three OSes
 ### Phase 6: release
 - [ ] Changelog dated; `v2.0.0` tagged after green; **stop** for the approval; verify-published; GitHub Release; Mark deprecates 1.x (D15)
 ### Phase 7: wrap-up
