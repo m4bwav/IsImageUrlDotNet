@@ -2,24 +2,27 @@
 
 <!-- Keep under 50 lines. Replace, never append. Written at the end of a work session so the next one starts without re-deriving state. -->
 
-## Current state
-- Phase 1 reached 2026-09-27: stopped at the plan review. Plan `ai-docs/plans/2026-09-27-modernization-and-v2-release.md` (D1-D17), decision `ai-docs/decisions/2026-09-27-v2-keeps-isimageurl-exact-new-imageurl-type.md` (proposed).
-- Phase 0 done except three recordings: capture program 4160a65; `tests/Golden/1.0.2.net10.0-linux.json` and the Mono 6.8 reference in 57cf1aa. From 57cf1aa on, `tests/Golden/` never changes (new recordings are added as new files by the same program).
-- Nothing is pushed: `git push` to m4bwav/IsImageUrlDotNet returns 403 ("Claude doesn't have GitHub access"). Local commits on `claude/cool-ptolemy-acnzeg`; `scratch/golden-capture-1.0.2` (adbf267) holds the throwaway workflow for the Windows and macOS captures.
+## Current state (2026-09-27)
+- Stopped at the pull request review (end of Phase 3): https://github.com/m4bwav/IsImageUrlDotNet/pull/1, branch `v2` into `master`, head a524f02 (plus the docs commit after it), CI run 36345678841 green on Ubuntu, Windows (net48 too) and macOS.
+- Mark ruled on 2026-09-27: every recommendation D1-D17 stands; the nuget.org Trusted Publishing policy is added (owner m4bwav, repository IsImageUrlDotNet, workflow release.yml, environment nuget, new versions only, glob IsImageUrlDotNet).
+- Phase 0 done: golden recordings for net48-windows, net10.0-windows, net10.0-macos (00c5355) and net10.0-linux (57cf1aa). `tests/Golden/` never changes.
+- Phase 3 review: 10 findings, all fixed or answered (PR comment); departures from the plan listed in the PR's "For review" (net462 build added to D8's targets, overloads instead of optional parameters, golden test in its own project).
+- Done in D16 already: environment `nuget` (required reviewer m4bwav, tag rule `v*`, secret NUGET_USER = rogersm0). Not yet: rulesets, scanning, push protection, private reporting, workflow permissions, homepage.
 
 ## Waiting on Mark
-- Push access: install the Claude GitHub App on m4bwav/IsImageUrlDotNet or reconnect GitHub (claude.ai/connect-github), then attach the repository to the session.
-- Rulings on D1-D17 (silence: the recommendations stand).
-- The nuget.org Trusted Publishing policy: owner m4bwav, repository IsImageUrlDotNet, workflow release.yml, environment nuget, "push only new package versions", glob IsImageUrlDotNet.
-- D16 settings need gh or admin rights (this session has neither): environment `nuget` (required reviewer m4bwav, deployment tag rule `v*`, secret NUGET_USER = rogersm0), rulesets, scanning, private reporting, workflow permissions read. Also: is there a Travis webhook or app on the repository?
+- Review of pull request #1 (its "For review" list: net462, redirect behaviour, the golden drive-letter entry, the icon).
+- OK to delete the Travis webhook (id 83050297, https://notify.travis-ci.org, active) and the branch `scratch/golden-capture-1.0.2` (throwaway capture workflow, run 36342661062).
 
-## Next steps once access exists
-1. `git push -u origin scratch/golden-capture-1.0.2`; wait for the golden-capture run; download the artifacts (or decode the BEGIN/END blocks in the log); check each header's `assemblySha256` is 8cf446a8...0454; commit `1.0.2.net48-windows.json`, `1.0.2.net10.0-windows.json`, `1.0.2.net10.0-macos.json` to `tests/Golden/` on the working branch; compare net10.0-linux with the CI Linux copy (expected identical).
-2. Push `claude/cool-ptolemy-acnzeg`; Phase 2 per the plan.
+## Next steps (Phase 4, after the review)
+1. Apply D16 before the merge: ruleset on master (no deletion, no force push, required check `ci`, admin bypass), tag ruleset (admins only), secret scanning and push protection, private vulnerability reporting, workflow permissions read, homepage https://www.nuget.org/packages/IsImageUrlDotNet.
+2. Mark squash-merges; read back `gh pr view 1 --json mergeCommit,mergedAt`.
+3. With the OK: `gh api -X DELETE repos/m4bwav/IsImageUrlDotNet/hooks/83050297`; `git push origin --delete scratch/golden-capture-1.0.2`.
+4. Phase 5: set `<Version>2.0.0-beta.1</Version>` and a `## [2.0.0-beta.1]` changelog section on master, wait for ci green, tag `v2.0.0-beta.1`, stop for Mark's approval, run verify-published.
 
-## Environment notes (cloud session)
-- .NET SDK 10.0.112 and Mono 6.8 come from Ubuntu's archive (`apt-get install dotnet-sdk-10.0 mono-complete`); Microsoft's and WineHQ's download hosts are blocked.
-- No gh, no everlast.py: ai-docs/INDEX.md is hand-written in the generated format.
+## Traps
+- Windows Git Bash: `dotnet nuget add source` refuses `/d/...` and `D:/...`; pass `cygpath -w`. `dotnet restore --source a --source https://...` read the URL as a local folder on SDK 10.0.401: use a nuget.config.
+- The golden test must stay alone in its project (fresh process on .NET Framework).
+- A canary before the source is committed: revert with an edit, not `git checkout -- src/`.
 
 ## Next single action
-Mark: grant push access, rule on the plan, add the Trusted Publishing policy.
+Mark: review pull request #1 and answer the two deletions.

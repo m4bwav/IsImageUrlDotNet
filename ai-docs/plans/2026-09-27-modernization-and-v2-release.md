@@ -123,7 +123,7 @@ From C#: `url.IsImageUrl()` (unchanged), `url.HasImageExtension()`, `await url.I
 - [x] Workflows and Dependabot, actionlint 1.7.12, zizmor 1.30.1 and check-workflow-shell.py clean
 - [x] Pushed; pull request with a "For review" list. **Stop.**
 ### Phase 3: review
-- [ ] Independent read-only review (prompts/review-subagent.md, NuGet substitutions); findings fixed or answered; summary on the pull request
+- [x] Independent read-only review (prompts/review-subagent.md, NuGet substitutions): 10 findings, all fixed or answered (a524f02, CI 36345678841 green); summary on pull request #1. D8 amended in the PR: a `net462` build joins `netstandard2.0;net10.0` (System.Net.Http for .NET Framework consumers)
 ### Phase 4: CI, settings, merge, cleanup
 - [ ] CI green (run id); D16 settings; merge after Mark's review (read the SHA and method back); scratch branch deleted with Mark's OK; Travis webhook removed if present
 ### Phase 5: release rehearsal
@@ -196,4 +196,4 @@ branch	scratch/golden-capture-1.0.2
 
 ## Next single action
 
-Mark reviews the pull request and gives the OK to delete the Travis webhook (83050297) and the branch `scratch/golden-capture-1.0.2`; then Phase 4.
+Mark reviews pull request #1 and gives the OK to delete the Travis webhook (83050297) and the branch `scratch/golden-capture-1.0.2`; then Phase 4.
