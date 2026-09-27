@@ -125,9 +125,9 @@ From C#: `url.IsImageUrl()` (unchanged), `url.HasImageExtension()`, `await url.I
 ### Phase 3: review
 - [x] Independent read-only review (prompts/review-subagent.md, NuGet substitutions): 10 findings, all fixed or answered (a524f02, CI 36345678841 green); summary on pull request #1. D8 amended in the PR: a `net462` build joins `netstandard2.0;net10.0` (System.Net.Http for .NET Framework consumers)
 ### Phase 4: CI, settings, merge, cleanup
-- [ ] CI green (run id); D16 settings; merge after Mark's review (read the SHA and method back); scratch branch deleted with Mark's OK; Travis webhook removed if present
+- [x] CI green (36345678841); merged by Mark as merge commit e9e1eb7 (2026-09-27T20:08:58Z; the rulesets came after the merge, not before); D16 settings applied; Travis webhook kept (Mark: ignore it); scratch branch still waiting for an OK
 ### Phase 5: release rehearsal
-- [ ] Mark has added the Trusted Publishing policy (D13). `v2.0.0-beta.1` tagged after green; **stop** for the approval; verify-published run id
+- [ ] Mark has added the Trusted Publishing policy (D13, done). `v2.0.0-beta.1` tagged on 06b4aa4 after ci 36349282496; release run 36349426955 waits for the approval (**stop**); verify-published run id
 ### Phase 6: release
 - [ ] Changelog dated; `v2.0.0` tagged after green; **stop** for the approval; verify-published; GitHub Release; Mark deprecates 1.x (D15)
 ### Phase 7: wrap-up
