@@ -1,0 +1,67 @@
+# THROWAWAY (scratch branch only, never merged): runs tests/Golden/Capture against the published IsImageUrlDotNet 1.0.2
+# on each runtime a caller can have (.NET Framework 4.8 on Windows; .NET 10 on Linux, Windows and macOS) and uploads
+# each recording as an artifact. The log also prints each file's SHA-256 and a gzip+base64 copy.
+name: golden-capture
+
+on:
+  push:
+    branches: ['scratch/golden-capture-*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  capture:
+    name: capture (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+      - name: Build
+        working-directory: tests/Golden/Capture
+        run: dotnet build -c Release
+      - name: Capture on net10.0 (twice; the runs must be identical)
+        working-directory: tests/Golden/Capture
+        run: |
+          os=$(echo "$RUNNER_OS" | tr '[:upper:]' '[:lower:]')
+          mkdir -p "$RUNNER_TEMP/out"
+          dotnet run -c Release -f net10.0 --no-build > "$RUNNER_TEMP/out/1.0.2.net10.0-$os.json"
+          dotnet run -c Release -f net10.0 --no-build > "$RUNNER_TEMP/again.json"
+          cmp "$RUNNER_TEMP/out/1.0.2.net10.0-$os.json" "$RUNNER_TEMP/again.json"
+      - name: Capture on net48 (Windows only; twice)
+        if: runner.os == 'Windows'
+        working-directory: tests/Golden/Capture
+        run: |
+          dotnet run -c Release -f net48 --no-build > "$RUNNER_TEMP/out/1.0.2.net48-windows.json"
+          dotnet run -c Release -f net48 --no-build > "$RUNNER_TEMP/again.json"
+          cmp "$RUNNER_TEMP/out/1.0.2.net48-windows.json" "$RUNNER_TEMP/again.json"
+      - name: Checksums and a copy in the log
+        run: |
+          cd "$RUNNER_TEMP/out"
+          for f in *.json; do
+            sha256sum "$f"
+            echo "BEGIN $f"
+            gzip -9c "$f" | base64 -w 0
+            echo
+            echo "END $f"
+          done
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: golden-${{ matrix.os }}
+          path: ${{ runner.temp }}/out/*.json
+          if-no-files-found: error
+          retention-days: 30
