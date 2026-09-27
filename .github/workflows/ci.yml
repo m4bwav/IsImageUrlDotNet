@@ -1,0 +1,191 @@
+# Every push to master and every pull request: locked restore, Fantomas and dotnet format checks, build with warnings
+# as errors, F# analyzers, the golden (its own process), unit, public-API and C# tests on Linux, macOS and Windows
+# (net10.0 everywhere; net48 on Windows, which runs the net462 build), a pack with a content check, fresh C# and F#
+# consumers of the packed package, and the final `ci` job the ruleset on master requires. Publishing is release.yml.
+# Actions are pinned to commit SHAs; Dependabot updates them.
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: build and test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # Source Link records the commit
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore --locked-mode
+      - run: dotnet tool restore
+      # F# is checked by Fantomas; dotnet format skips F# projects and exits 0, so it only checks the C# tests.
+      - run: dotnet fantomas --check .
+      - run: dotnet format tests/IsImageUrlDotNet.CSharpTests --no-restore --verify-no-changes
+      - run: dotnet build --no-restore -c Release
+      # G-Research and Ionide analyzers, every finding an error. IsImageUrl.fs is 1.0.2's code kept exactly (D1): its
+      # `| null | "" ->` trips IONIDE-005, and changing it is what the golden test forbids, so that file is excluded.
+      - name: F# analyzers
+        if: runner.os == 'Linux'
+        run: |
+          gp=$(dotnet nuget locals global-packages --list | sed 's/^global-packages: //')
+          dotnet fsharp-analyzers --project src/IsImageUrlDotNet/IsImageUrlDotNet.fsproj \
+            --analyzers-path "${gp}g-research.fsharp.analyzers/0.25.0/analyzers/dotnet/fs" \
+            --analyzers-path "${gp}ionide.analyzers/0.19.0/analyzers/dotnet/fs" \
+            --treat-as-error '*' --exclude-files '**/IsImageUrl.fs'
+      # A dedicated restore that fails on any audit finding, so a future advisory blocks a merge but not a local build.
+      - name: NuGet audit as errors
+        run: dotnet restore -p:AuditPipeline=true --force
+      - name: Test (net10.0)
+        run: dotnet test --no-build -c Release -f net10.0 --logger trx --results-directory TestResults
+      - name: Test (net48, Windows only; exercises the net462 build)
+        if: runner.os == 'Windows'
+        run: dotnet test --no-build -c Release -f net48 --logger trx --results-directory TestResults
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: test-results-${{ matrix.os }}
+          path: TestResults
+          retention-days: 30
+      - name: Pack
+        run: dotnet pack src/IsImageUrlDotNet --no-build -c Release -o artifacts
+      - name: The package holds exactly what it should and declares its dependencies
+        if: runner.os == 'Linux'
+        run: |
+          nupkg=$(ls artifacts/IsImageUrlDotNet.[0-9]*.nupkg)
+          expected=$'IsImageUrlDotNet.nuspec\nREADME.md\nicon.png\nlib/net10.0/IsImageUrlDotNet.dll\nlib/net10.0/IsImageUrlDotNet.xml\nlib/net462/IsImageUrlDotNet.dll\nlib/net462/IsImageUrlDotNet.xml\nlib/netstandard2.0/IsImageUrlDotNet.dll\nlib/netstandard2.0/IsImageUrlDotNet.xml'
+          actual=$(unzip -Z1 "$nupkg" | grep -Ev '^(_rels/|package/|\[Content_Types\])' | LC_ALL=C sort)
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::unexpected package contents"
+            diff <(echo "$expected") <(echo "$actual")
+            exit 1
+          fi
+          nuspec=$(unzip -p "$nupkg" IsImageUrlDotNet.nuspec | tr -d '\r\n')
+          for tfm in .NETStandard2.0 .NETFramework4.6.2 net10.0; do
+            echo "$nuspec" | grep -Eq "<group targetFramework=\"$tfm\">[[:space:]]*<dependency id=\"FSharp.Core\" version=\"6.0.7\"[^>]*/>[[:space:]]*</group>" \
+              || { echo "::error::$tfm must depend on FSharp.Core 6.0.7 and nothing else"; echo "$nuspec"; exit 1; }
+          done
+          # .NET Framework consumers need System.Net.Http for ImageUrl's HttpClient overloads.
+          echo "$nuspec" | grep -q '<frameworkAssembly assemblyName="System.Net.Http" targetFramework=".NETFramework4.6.2" />' \
+            || { echo "::error::no System.Net.Http frameworkAssembly for .NETFramework4.6.2"; echo "$nuspec"; exit 1; }
+      # Fresh C# and F# consumers of the packed package, with no FSharp.Core of their own: net10.0 everywhere and net48
+      # on Windows. Their own packages folder, so a copy of this version cached by setup-dotnet cannot stand in for the
+      # package just packed.
+      - name: Fresh consumers of the packed package
+        run: |
+          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' src/IsImageUrlDotNet/IsImageUrlDotNet.fsproj)
+          # Git Bash on Windows: $PWD is /d/a/..., and `dotnet nuget add source` also refuses D:/a/...; it takes D:\a\...
+          artifacts="$PWD/artifacts"
+          if command -v cygpath >/dev/null; then artifacts=$(cygpath -w "$artifacts"); fi
+          export NUGET_PACKAGES="$RUNNER_TEMP/consumer-packages"
+          frameworks="net10.0"
+          if [ "$RUNNER_OS" = Windows ]; then frameworks="net10.0 net48"; fi
+          for tfm in $frameworks; do
+            cs="$RUNNER_TEMP/cs-$tfm"
+            mkdir -p "$cs"
+            cat > "$cs/Consumer.csproj" <<EOF
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>$tfm</TargetFramework><LangVersion>latest</LangVersion><NoWarn>CS0618</NoWarn></PropertyGroup>
+            <ItemGroup>
+              <PackageReference Include="IsImageUrlDotNet" Version="[$version]" />
+              <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+            </ItemGroup>
+          </Project>
+          EOF
+            cat > "$cs/Program.cs" <<'EOF'
+          using System;
+          using System.Threading;
+          using IsImageUrlDotNet;
+
+          class Program
+          {
+              static int Main()
+              {
+                  var ok = "http://example.test/a.png".IsImageUrl()
+                      && "http://example.test/a.png?w=1".HasImageExtension()
+                      && !"http://example.test/a.pdf".HasImageExtension()
+                      && !"mailto:a@example.test".IsImageUrlAsync(CancellationToken.None).GetAwaiter().GetResult();
+                  Console.WriteLine(ok ? "C# consumer answers as expected" : "wrong answer");
+                  return ok ? 0 : 1;
+              }
+          }
+          EOF
+            fs="$RUNNER_TEMP/fs-$tfm"
+            mkdir -p "$fs"
+            cat > "$fs/Consumer.fsproj" <<EOF
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>$tfm</TargetFramework><NoWarn>44</NoWarn></PropertyGroup>
+            <ItemGroup><Compile Include="Program.fs" /></ItemGroup>
+            <ItemGroup>
+              <PackageReference Include="IsImageUrlDotNet" Version="[$version]" />
+              <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+            </ItemGroup>
+          </Project>
+          EOF
+            cat > "$fs/Program.fs" <<'EOF'
+          open System.Threading
+          open IsImageUrlDotNet
+
+          let ok =
+              IsImageUrlDotNetLib.IsImageUrl "http://example.test/a.png"
+              && ImageUrl.HasImageExtension "photo.webp"
+              && not (ImageUrl.HasImageExtension "x.pdf")
+              && not (ImageUrl.IsImageUrlAsync("mailto:a@example.test", CancellationToken.None).Result)
+
+          printfn "%s" (if ok then "F# consumer answers as expected" else "wrong answer")
+          exit (if ok then 0 else 1)
+          EOF
+            for dir in "$cs" "$fs"; do
+              dotnet new nugetconfig -o "$dir"
+              dotnet nuget add source "$artifacts" -n local --configfile "$dir/nuget.config"
+              dotnet run --project "$dir" -c Release
+            done
+          done
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: runner.os == 'Linux'
+        with:
+          name: packages
+          path: artifacts/*nupkg
+          retention-days: 30
+
+  ci:
+    name: ci
+    if: ${{ always() }}
+    needs: [build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Every job passed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "job results: $RESULTS"
+          for result in $RESULTS; do
+            if [ "$result" != success ]; then
+              exit 1
+            fi
+          done

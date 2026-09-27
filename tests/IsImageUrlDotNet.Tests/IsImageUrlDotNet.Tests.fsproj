@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- net48 runs the library's net462 build (Windows only); net10.0 runs the net10.0 build everywhere. -->
+    <!-- Both targets on every OS, so one packages.lock.json serves the whole matrix; CI runs net48 on Windows only. -->
+    <TargetFrameworks>net10.0;net48</TargetFrameworks>
+    <IsTestProject>true</IsTestProject>
+    <!-- The frozen fixture server file (linked below) was written without F# nullness; the tests read 1.0.2's lists
+         beside the obsolete IsImageUrl (FS0044). -->
+    <Nullable>disable</Nullable>
+    <NoWarn>$(NoWarn);44</NoWarn>
+  </PropertyGroup>
+
+  <!-- A locked-mode lock file must not depend on what the SDK infers per OS. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The golden fixture server (frozen since 57cf1aa), reused for the new API's tests. The golden test itself is
+         tests/IsImageUrlDotNet.GoldenTests. -->
+    <Compile Include="../Golden/Capture/FixtureServer.fs" Link="Golden/FixtureServer.fs" />
+    <Compile Include="PublicApi.fs" />
+    <Compile Include="PublicApiTests.fs" />
+    <Compile Include="ImageUrlTests.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="PublicApi-1.0.2.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="6.0.7" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageReference Include="NUnit" Version="4.6.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.3.0" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/IsImageUrlDotNet/IsImageUrlDotNet.fsproj" />
+  </ItemGroup>
+
+</Project>

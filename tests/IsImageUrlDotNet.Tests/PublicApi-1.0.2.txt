@@ -1,0 +1,4 @@
+type IsImageUrlDotNet.IsImageUrlDotNetLib [Extension]
+property IsImageUrlDotNet.IsImageUrlDotNetLib.ImageFileExtensions : Microsoft.FSharp.Collections.FSharpList`1[System.String]
+property IsImageUrlDotNet.IsImageUrlDotNetLib.NonImageFileExtensions : Microsoft.FSharp.Collections.FSharpList`1[System.String]
+method IsImageUrlDotNet.IsImageUrlDotNetLib.IsImageUrl(System.String opt) : System.Boolean [Extension]

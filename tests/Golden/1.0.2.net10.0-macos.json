@@ -1,0 +1,1793 @@
+{
+  "package": "IsImageUrlDotNet@1.0.2",
+  "assembly": "IsImageUrlDotNet 1.0.2.0",
+  "assemblySha256": "8cf446a81a29d62350b57c800a7aed3a006429162fc3dd48f818e8f20dc30454",
+  "fsharpCore": "10.1.0.0",
+  "runtime": ".NET 10.0.12",
+  "os": "macos",
+  "captured": "2026-09-27",
+  "note": "Golden outputs of the published IsImageUrlDotNet 1.0.2 (lib/net45), recorded by tests/Golden/Capture against the local fixture server in FixtureServer.fs. Never edit; never regenerate from new code.",
+  "cases": [
+    {
+      "method": "ImageFileExtensions",
+      "culture": "en-US",
+      "args": [],
+      "result": [
+        "png",
+        "jpg",
+        "gif",
+        "raw",
+        "bmp",
+        "svg",
+        "jpeg",
+        "psd"
+      ],
+      "requests": []
+    },
+    {
+      "method": "NonImageFileExtensions",
+      "culture": "en-US",
+      "args": [],
+      "result": [
+        "exe",
+        "pdf",
+        "html",
+        "htm",
+        "txt",
+        "mp3",
+        "wav",
+        "odp"
+      ],
+      "requests": []
+    },
+    {
+      "method": "ImageFileExtensions type",
+      "culture": "en-US",
+      "args": [],
+      "result": "Microsoft.FSharp.Collections.FSharpList`1",
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        null
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        ""
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        " "
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "\t"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "a"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "png"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        ".png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "image.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "IMAGE.PNG"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "photo.JPG"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.jpeg"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.gif"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.bmp"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.svg"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.raw"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.psd"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.exe"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.pdf"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.html"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.htm"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.txt"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.mp3"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.wav"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.odp"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.webp"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.tiff"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.ico"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.avif"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.zip"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.png.exe"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "x.exe.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "a.b/c.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "relative/path"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "HTTP://FIXTURE.TEST/A.PNG"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a.pdf"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "https://fixture.test/a.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/dir/a.jpeg"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a.png?size=1"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/a.png?size=1 HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a.png#top"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/a.png HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a.pdf?x=1"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/a.pdf?x=1 HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a.png."
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/a.png. HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/dir.png/file"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/dir.png/file HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/photo.webp"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/photo.webp HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/ HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/ HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/image-png"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-png HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/image-jpeg"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-jpeg HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/image-gif"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-gif HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/image-webp"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-webp HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/image-svg"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-svg HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/image-upper"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/image-upper HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/image-params"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-params HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/html"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/html HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/html-upper"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/html-upper HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/html-and-image"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/html-and-image HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/json"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/json HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/octet"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/octet HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/pdf"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/pdf HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/x-imagefile"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/x-imagefile HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/text-image"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/text-image HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/no-type"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/no-type HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/empty-type"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/empty-type HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/not-found-image"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/not-found-image HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/server-error"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (500) Internal Server Error.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/server-error HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/no-content-image"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/no-content-image HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/redirect-image"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/redirect-image HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/image-png HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/redirect-html"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://fixture.test/redirect-html HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/html HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/redirect-other-host"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/redirect-other-host HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://other.test/image-png HTTP/1.1",
+          "Host: other.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/redirect-relative"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/redirect-relative HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/image-png HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/redirect-https"
+      ],
+      "result": {
+        "$throws": "WebException: The proxy tunnel request to proxy 'http://127.0.0.1:<port>/' failed with status code '403'.\"",
+        "status": "UnknownError",
+        "inner": {
+          "$throws": "HttpRequestException: The proxy tunnel request to proxy 'http://127.0.0.1:<port>/' failed with status code '403'.\""
+        }
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/redirect-https HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "CONNECT fixture.test:443 HTTP/1.1",
+          "Host: fixture.test:443"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/redirect-loop"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (302) Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/redirect-loop HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/redirect-no-location"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (302) Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/redirect-no-location HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/close"
+      ],
+      "result": {
+        "$throws": "WebException: An error occurred while sending the request.",
+        "status": "UnknownError",
+        "inner": {
+          "$throws": "HttpRequestException: An error occurred while sending the request.",
+          "inner": {
+            "$throws": "HttpIOException: The response ended prematurely. (ResponseEnded)"
+          }
+        }
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/close HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/close HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/close HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ],
+        [
+          "GET http://fixture.test/close HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/garbage"
+      ],
+      "result": {
+        "$throws": "WebException: Received an invalid status line: 'NOT HTTP AT ALL'.",
+        "status": "UnknownError",
+        "inner": {
+          "$throws": "HttpRequestException: Received an invalid status line: 'NOT HTTP AT ALL'."
+        }
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/garbage HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/image-png?q=1"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-png?q=1 HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://user:secret@fixture.test/image-png"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-png HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test:8080/image-png"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test:8080/image-png HTTP/1.1",
+          "Host: fixture.test:8080",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "https://fixture.test/image-png"
+      ],
+      "result": {
+        "$throws": "WebException: The proxy tunnel request to proxy 'http://127.0.0.1:<port>/' failed with status code '403'.\"",
+        "status": "UnknownError",
+        "inner": {
+          "$throws": "HttpRequestException: The proxy tunnel request to proxy 'http://127.0.0.1:<port>/' failed with status code '403'.\""
+        }
+      },
+      "requests": [
+        [
+          "CONNECT fixture.test:443 HTTP/1.1",
+          "Host: fixture.test:443"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://127.0.0.1:<port>/image-png"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://127.0.0.1:<port>/image-png HTTP/1.1",
+          "Host: 127.0.0.1:<port>",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://localhost:<port>/html"
+      ],
+      "result": false,
+      "requests": [
+        [
+          "GET http://localhost:<port>/html HTTP/1.1",
+          "Host: localhost:<port>",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "ftp://127.0.0.1:1/file"
+      ],
+      "result": {
+        "$throws": "WebException: Unable to connect to the remote server",
+        "status": "ConnectFailure"
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "file:///nonexistent-isimageurl/file"
+      ],
+      "result": {
+        "$throws": "WebException: Could not find a part of the path '/nonexistent-isimageurl/file'.",
+        "status": "UnknownError",
+        "inner": {
+          "$throws": "WebException: Could not find a part of the path '/nonexistent-isimageurl/file'.",
+          "status": "ConnectFailure",
+          "inner": {
+            "$throws": "DirectoryNotFoundException: Could not find a part of the path '/nonexistent-isimageurl/file'."
+          }
+        }
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "mailto:someone@fixture.test"
+      ],
+      "result": {
+        "$throws": "NotSupportedException: The URI prefix is not recognized."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "data:image/png;base64,iVBORw0KGgo="
+      ],
+      "result": {
+        "$throws": "NotSupportedException: The URI prefix is not recognized."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "urn:isbn:0451450523"
+      ],
+      "result": {
+        "$throws": "NotSupportedException: The URI prefix is not recognized."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "javascript:alert(1)"
+      ],
+      "result": {
+        "$throws": "NotSupportedException: The URI prefix is not recognized."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "//127.0.0.1/share/file"
+      ],
+      "result": {
+        "$throws": "WebException: Could not find file '<cwd>/\\\\127.0.0.1\\share\\file'.",
+        "status": "UnknownError",
+        "inner": {
+          "$throws": "WebException: Could not find file '<cwd>/\\\\127.0.0.1\\share\\file'.",
+          "status": "ConnectFailure",
+          "inner": {
+            "$throws": "FileNotFoundException: Could not find file '<cwd>/\\\\127.0.0.1\\share\\file'."
+          }
+        }
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "/nonexistent-isimageurl/file"
+      ],
+      "result": {
+        "$throws": "WebException: Could not find a part of the path '/nonexistent-isimageurl/file'.",
+        "status": "UnknownError",
+        "inner": {
+          "$throws": "WebException: Could not find a part of the path '/nonexistent-isimageurl/file'.",
+          "status": "ConnectFailure",
+          "inner": {
+            "$throws": "DirectoryNotFoundException: Could not find a part of the path '/nonexistent-isimageurl/file'."
+          }
+        }
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "C:\\temp\\x.png"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "file://<work>/fixture-file"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "file://<work>/missing-file"
+      ],
+      "result": {
+        "$throws": "WebException: Could not find file '<work>/missing-file'.",
+        "status": "UnknownError",
+        "inner": {
+          "$throws": "WebException: Could not find file '<work>/missing-file'.",
+          "status": "ConnectFailure",
+          "inner": {
+            "$throws": "FileNotFoundException: Could not find file '<work>/missing-file'."
+          }
+        }
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a b.png"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        " http://fixture.test/a.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a.png "
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/a.png HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a.png\n"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/a.png HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/ü.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/%E2%82%AC.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/a|b.png"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "a|b.png"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "a<b.png"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "a\"b.png"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/😀.png"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/<a x 300>.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/<a x 70000>.png"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "en-US",
+      "args": [
+        "http://fixture.test/<a x 70000>"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/<a x 70000> HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "tr-TR",
+      "args": [
+        "x.GIF"
+      ],
+      "result": {
+        "$throws": "UriFormatException: Invalid URI: The format of the URI could not be determined."
+      },
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "tr-TR",
+      "args": [
+        "IMAGE.PNG"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "tr-TR",
+      "args": [
+        "photo.JPG"
+      ],
+      "result": true,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "tr-TR",
+      "args": [
+        "http://fixture.test/A.GIF"
+      ],
+      "result": {
+        "$throws": "WebException: The remote server returned an error: (404) Not Found.",
+        "status": "ProtocolError"
+      },
+      "requests": [
+        [
+          "GET http://fixture.test/A.GIF HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "tr-TR",
+      "args": [
+        "http://fixture.test/FILE.PDF"
+      ],
+      "result": false,
+      "requests": []
+    },
+    {
+      "method": "IsImageUrl",
+      "culture": "tr-TR",
+      "args": [
+        "http://fixture.test/image-png"
+      ],
+      "result": true,
+      "requests": [
+        [
+          "GET http://fixture.test/image-png HTTP/1.1",
+          "Host: fixture.test",
+          "Connection: Keep-Alive"
+        ]
+      ]
+    },
+    {
+      "method": "extension attributes",
+      "culture": "en-US",
+      "args": [],
+      "result": {
+        "type": true,
+        "method": true,
+        "assembly": false
+      },
+      "requests": []
+    }
+  ]
+}
