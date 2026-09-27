@@ -84,3 +84,9 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 
 ## [2026-09-27] add | Phase 6: 2.0.0 tagged, waiting for approval
 - Pull request #5 (Version 2.0.0, changelog heading dated 2026-09-27) green, squash-merged 9e51d05; ci run 36350423737 on master green; tag v2.0.0 pushed; release run 36350568172 waiting at environment `nuget` after build, Windows tests and attestation passed.
+
+## [2026-09-27] add | Phase 6 and 7: 2.0.0 released, verified, wrapped up
+- Mark approved release run 36350568172: push and GitHub Release (v2.0.0, not a prerelease, nupkg and snupkg) succeeded.
+- verify-published run 36352902029 green on ubuntu-24.04, windows-latest and macos-latest. nuget.org flat container: 1.0.0, 1.0.2, 2.0.0-beta.1, 2.0.0; search: 2.0.0 with iconUrl. check-readme-images on the README inside the published 2.0.0 nupkg (`--registry nuget`): 3 images, every image works.
+- Phase 7: `PackageValidationBaselineVersion` 2.0.0 (locked restore, build and pack clean against the published package); HANDOFF rewritten around standing work; plan completed. Mark still owes the 1.x deprecation (UI) and an answer on `scratch/golden-capture-1.0.2`.
+## [2026-09-27] index | rebuilt (4 entries)

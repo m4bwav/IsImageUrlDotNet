@@ -1,7 +1,7 @@
 ---
 title: Modernization and v2 release
 kind: plan
-status: active
+status: completed
 date: 2026-09-27
 verified: 2026-09-27
 stale_after: never
@@ -15,7 +15,7 @@ The plan for taking the NuGet package IsImageUrlDotNet from 1.0.2 (2016, F#, `li
 
 ## Status
 
-Active. 2026-09-27: Mark ruled that every recommendation stands and added the Trusted Publishing policy (D13). Phase 0 finished on Windows (00c5355), Phase 2 on `v2` (fb93673 and later), Phase 3 review under way; stopped at the pull request.
+Completed 2026-09-27: 2.0.0 released through Trusted Publishing after Mark's approval and verified from nuget.org. Owed: Mark deprecates 1.x (D15).
 
 ## Goal
 
@@ -129,9 +129,9 @@ From C#: `url.IsImageUrl()` (unchanged), `url.HasImageExtension()`, `await url.I
 ### Phase 5: release rehearsal
 - [x] Mark has added the Trusted Publishing policy (D13). `v2.0.0-beta.1` tagged on 06b4aa4 after ci 36349282496; release run 36349426955 approved and green; verify-published run 36349972948 green on three OSes
 ### Phase 6: release
-- [ ] Changelog dated; `v2.0.0` tagged after green; **stop** for the approval; verify-published; GitHub Release; Mark deprecates 1.x (D15)
+- [x] Changelog dated (#5, 9e51d05); `v2.0.0` tagged after ci 36350423737; release run 36350568172 approved and green; verify-published 36352902029 green on three OSes; GitHub Release v2.0.0; Mark deprecates 1.x (D15; owed, UI)
 ### Phase 7: wrap-up
-- [ ] HANDOFF around standing work; inventory row; lessons into the skill; what the kickoff got wrong
+- [x] HANDOFF around standing work; PackageValidationBaselineVersion 2.0.0; inventory row, kickoff corrections and lessons by pull request (2026-09-27)
 
 ## Test strategy
 

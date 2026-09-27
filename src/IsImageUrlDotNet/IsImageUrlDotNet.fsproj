@@ -23,9 +23,10 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageReleaseNotes>See https://github.com/m4bwav/IsImageUrlDotNet/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <IsPackable>true</IsPackable>
-    <!-- Compares the two target frameworks' APIs at pack time. 1.0.2 (net45 only) cannot be a baseline; after the
-         2.0.0 release, set PackageValidationBaselineVersion to 2.0.0. -->
+    <!-- Compares the target frameworks' APIs, and the API against the published 2.0.0, at pack time: a later 2.x that
+         removes or changes a public member fails the pack. -->
     <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>2.0.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <ItemGroup>
