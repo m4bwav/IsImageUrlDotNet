@@ -15,7 +15,7 @@ The plan for taking the NuGet package IsImageUrlDotNet from 1.0.2 (2016, F#, `li
 
 ## Status
 
-Completed 2026-09-27: 2.0.0 released through Trusted Publishing after Mark's approval and verified from nuget.org. Owed: Mark deprecates 1.x (D15).
+Completed 2026-09-27: 2.0.0 released through Trusted Publishing after Mark's approval and verified from nuget.org. Mark deprecated 1.x the same day (D15).
 
 ## Goal
 
@@ -129,7 +129,7 @@ From C#: `url.IsImageUrl()` (unchanged), `url.HasImageExtension()`, `await url.I
 ### Phase 5: release rehearsal
 - [x] Mark has added the Trusted Publishing policy (D13). `v2.0.0-beta.1` tagged on 06b4aa4 after ci 36349282496; release run 36349426955 approved and green; verify-published run 36349972948 green on three OSes
 ### Phase 6: release
-- [x] Changelog dated (#5, 9e51d05); `v2.0.0` tagged after ci 36350423737; release run 36350568172 approved and green; verify-published 36352902029 green on three OSes; GitHub Release v2.0.0; Mark deprecates 1.x (D15; owed, UI)
+- [x] Changelog dated (#5, 9e51d05); `v2.0.0` tagged after ci 36350423737; release run 36350568172 approved and green; verify-published 36352902029 green on three OSes; GitHub Release v2.0.0; Mark deprecated 1.0.0 and 1.0.2 (D15, 2026-09-27)
 ### Phase 7: wrap-up
 - [x] HANDOFF around standing work; PackageValidationBaselineVersion 2.0.0; inventory row, kickoff corrections and lessons by pull request (2026-09-27)
 

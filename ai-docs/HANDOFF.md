@@ -8,7 +8,7 @@
 - Repository: rulesets `master` (24084842, required check `ci`, admin bypass) and `Tags only by admins` (24084845); secret scanning, push protection, private vulnerability reporting on; workflow permissions read.
 
 ## Owed by Mark (UI or decisions only)
-- Deprecate 1.0.0 and 1.0.2 on nuget.org (D15): reason Legacy, alternate package IsImageUrlDotNet 2.0.0, message "1.x targets .NET Framework 4.5 and does not declare its FSharp.Core dependency; use 2.x". Not yet confirmed done.
+- Done 2026-09-27: Mark deprecated 1.0.0 and 1.0.2 on nuget.org (reason Legacy, the D15 message; no alternate package set, optional).
 - Whether to delete the branch `scratch/golden-capture-1.0.2` (throwaway capture workflow; unanswered). The Travis webhook 83050297 stays by his decision.
 
 ## Standing work
@@ -23,4 +23,4 @@
 - Commit before a canary; revert with `git checkout -- <file>` only then.
 
 ## Next single action
-None for agents; Mark's deprecation of 1.x on nuget.org.
+None; the run is complete.
