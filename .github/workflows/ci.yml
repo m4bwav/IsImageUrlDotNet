@@ -47,6 +47,16 @@ jobs:
       - run: dotnet fantomas --check .
       - run: dotnet format tests/IsImageUrlDotNet.CSharpTests --no-restore --verify-no-changes
       - run: dotnet build --no-restore -c Release
+      # G-Research and Ionide analyzers, every finding an error. IsImageUrl.fs is 1.0.2's code kept exactly (D1): its
+      # `| null | "" ->` trips IONIDE-005, and changing it is what the golden test forbids, so that file is excluded.
+      - name: F# analyzers
+        if: runner.os == 'Linux'
+        run: |
+          gp=$(dotnet nuget locals global-packages --list | sed 's/^global-packages: //')
+          dotnet fsharp-analyzers --project src/IsImageUrlDotNet/IsImageUrlDotNet.fsproj \
+            --analyzers-path "${gp}g-research.fsharp.analyzers/0.25.0/analyzers/dotnet/fs" \
+            --analyzers-path "${gp}ionide.analyzers/0.19.0/analyzers/dotnet/fs" \
+            --treat-as-error '*' --exclude-files '**/IsImageUrl.fs'
       # A dedicated restore that fails on any audit finding, so a future advisory blocks a merge but not a local build.
       - name: NuGet audit as errors
         run: dotnet restore -p:AuditPipeline=true --force

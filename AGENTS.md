@@ -29,6 +29,8 @@ dotnet tool restore
 dotnet fantomas --check .                  # F# format; dotnet format skips F# and exits 0
 dotnet format tests/IsImageUrlDotNet.CSharpTests --no-restore --verify-no-changes
 dotnet build -c Release                    # warnings are errors
+# F# analyzers (G-Research 0.25.0, Ionide 0.19.0), as ci.yml runs them; IsImageUrl.fs excluded (1.0.2's code):
+dotnet fsharp-analyzers --project src/IsImageUrlDotNet/IsImageUrlDotNet.fsproj --analyzers-path <global-packages>/g-research.fsharp.analyzers/0.25.0/analyzers/dotnet/fs --analyzers-path <global-packages>/ionide.analyzers/0.19.0/analyzers/dotnet/fs --treat-as-error '*' --exclude-files '**/IsImageUrl.fs'
 dotnet test --no-build -c Release -f net10.0
 dotnet test --no-build -c Release -f net48 # Windows only; runs the netstandard2.0 build
 dotnet pack src/IsImageUrlDotNet --no-build -c Release -o artifacts

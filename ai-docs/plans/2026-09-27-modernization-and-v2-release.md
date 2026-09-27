@@ -15,7 +15,7 @@ The plan for taking the NuGet package IsImageUrlDotNet from 1.0.2 (2016, F#, `li
 
 ## Status
 
-Active. Phase 1 reached on 2026-09-27; stopped at the plan review. Waiting for Mark's rulings, the Trusted Publishing policy, and push access for this repository (the Windows golden capture needs it).
+Active. 2026-09-27: Mark ruled that every recommendation stands and added the Trusted Publishing policy (D13). Phase 0 finished on Windows (00c5355), Phase 2 on `v2` (fb93673 and later), Phase 3 review under way; stopped at the pull request.
 
 ## Goal
 
@@ -70,7 +70,7 @@ Every item below stays exactly as it is in `IsImageUrl` (D1, D3); the new `Image
 | D11 | Dead services, badges | Remove `.travis.yml`; Mark checks for a Travis webhook and app (D16); README gains three badges: NuGet version, CI, downloads; no other images | Defaults | none |
 | D12 | Old files to remove | `IsImageUrlDotNet/IsImageUrlDotNet.fsproj` (replaced by an SDK-style one), `AssemblyInfo.fs`, `Script.fsx`, `IsImageUrlDotNet.nuspec`, `IsImageUrlDotNet.sln` (by `IsImageUrlDotNet.slnx`), `IsImageUrlDotNet.Test/` (MSTest against the internet; replaced by the golden, unit and C# tests), `.travis.yml` | Formats SDK 10 cannot build | Keep the old test project in the solution (cannot build) |
 | D13 | Release and version | 2.0.0-beta.1 as the rehearsal, then 2.0.0, from `release.yml` (TrailerClipper's, adapted) gated by the `nuget` environment. **Mark adds the Trusted Publishing policy on nuget.org**: owner `m4bwav`, repository `IsImageUrlDotNet`, workflow `release.yml`, environment `nuget`, scope "push only new package versions", glob `IsImageUrlDotNet` | The human gate; no API key anywhere | Real versions only (the brief asks for a beta first) |
-| D14 | Branch, default branch, extras | Work on `claude/cool-ptolemy-acnzeg` (this cloud session's required branch; the skill's `v2` would otherwise be used) and open the pull request from it; keep `master`; no benchmark project (no hot path) | Session rule | none |
+| D14 | Branch, default branch, extras | ~~Work on `claude/cool-ptolemy-acnzeg`~~ Superseded 2026-09-27: the work moved to `v2` (the skill's default) when a Windows session took it over; keep `master`; no benchmark project (no hot path) | Session rule | none |
 | D15 | Dependents and 1.x | None to move. After 2.0.0 Mark deprecates 1.0.0 and 1.0.2 on nuget.org (UI only): reason Legacy, alternate package IsImageUrlDotNet 2.0.0, message "1.x targets .NET Framework 4.5 and does not declare its FSharp.Core dependency; use 2.x" | Points the few real downloads at the fix | Unlist (hides history) |
 | D16 | Repository settings (Phase 4) | Ruleset on `master` (no deletion, no force push, required check `ci`, admin bypass), tag ruleset admins only, secret scanning, push protection, private vulnerability reporting, workflow permissions read, homepage the nuget.org page; environment `nuget` with Mark as required reviewer, tag rule `v*`, secret `NUGET_USER` = `rogersm0`. This session has no gh and no admin API: either Mark grants push access and a later session with gh applies them, or Mark applies them from the commands in HANDOFF | Skill defaults | none |
 | D17 | The golden recordings | One file per runtime and OS, all from the published 1.0.2 by the same program: `net10.0-linux` (done), `net48-windows`, `net10.0-windows`, `net10.0-macos` (throwaway workflow, needs push access). Mono 6.8 kept as a reference only, not a test input: Mono is not .NET Framework, and it disagrees with .NET 10 in 12 results | A caller's answer depends on the runtime (`Path`, `Uri` and `WebRequest` differ), so each runtime is compared with itself | One file from .NET Framework only (the new net10.0 build would then need dozens of runtime exceptions) |
@@ -112,16 +112,16 @@ From C#: `url.IsImageUrl()` (unchanged), `url.HasImageExtension()`, `await url.I
 - [x] Cloned; survey-nuget.sh output in `ai-docs/notes/survey-2026-09-27.md` (GitHub half by the GitHub tools; no gh here)
 - [x] Old build run as it is: fails on SDK 10.0.112 and on Mono 6.8's xbuild; old tests need the internet (not run)
 - [x] Golden capture from the published 1.0.2: program 4160a65; recordings `1.0.2.net10.0-linux.json` and the Mono reference in 57cf1aa (from here on the capture program and each recording never change)
-- [ ] Recordings `net48-windows`, `net10.0-windows`, `net10.0-macos` from the throwaway workflow on `scratch/golden-capture-1.0.2` (adbf267): **blocked, no push access**
+- [x] Recordings `net48-windows` and `net10.0-windows` captured locally (twice each, identical), `net10.0-macos` from run 36342661062 on `scratch/golden-capture-1.0.2` (adbf267); commit 00c5355, only added files
 - [x] ai-docs (by hand; no everlast.py here), AGENTS.md, CLAUDE.md with the `@AGENTS.md` import, Copilot pointer
 ### Phase 1: plan
 - [x] This plan and the decision record. **Stop**: Mark rules on the table; questions: push access, the Trusted Publishing policy, the `nuget` environment and repository settings (D16), deleting the scratch branch afterwards.
 ### Phase 2: rewrite
-- [ ] Remove the D12 files; add the templates (F# changes in D9)
-- [ ] Golden test first, green on the first build on every recording; canary: a planted line in the source turns it red, reverted, green (both logged); `git diff --exit-code 57cf1aa -- tests/Golden` empty (and against the later recording commit for its files); then the new API, unit tests, C# tests, README, CHANGELOG, SECURITY.md, AGENTS.md
-- [ ] Verified on net10.0 (Linux here), CI on three OSes and net48; from a fresh clone
-- [ ] Workflows and Dependabot, actionlint and check-workflow-shell.py clean
-- [ ] Pushed; pull request with a "For review" list. **Stop.**
+- [x] Remove the D12 files; add the templates (F# changes in D9); icon added at Mark's request (2026-09-27)
+- [x] Golden test first, green on the first build on every recording; canary: a planted line in the source turns it red, reverted, green (both logged); `git diff --exit-code 57cf1aa -- tests/Golden` empty (and against the later recording commit for its files); then the new API, unit tests, C# tests, README, CHANGELOG, SECURITY.md, AGENTS.md
+- [x] Verified on net10.0 and net48 on Windows, and from a fresh clone on drive C: (CI on three OSes: pull request)
+- [x] Workflows and Dependabot, actionlint 1.7.12, zizmor 1.30.1 and check-workflow-shell.py clean
+- [x] Pushed; pull request with a "For review" list. **Stop.**
 ### Phase 3: review
 - [ ] Independent read-only review (prompts/review-subagent.md, NuGet substitutions); findings fixed or answered; summary on the pull request
 ### Phase 4: CI, settings, merge, cleanup
@@ -185,7 +185,7 @@ From C#: `url.IsImageUrl()` (unchanged), `url.HasImageExtension()`, `await url.I
 
 - Push access to this repository is missing (403 from GitHub on `git push`); nothing can be pushed, and the Windows recordings cannot be made, until Mark installs the Claude GitHub App on the repository or reconnects GitHub.
 - If `net48-windows` shows that the netstandard2.0 build answers differently from 1.0.2 on .NET Framework in some case, that difference comes back to Mark as a named exception before it is accepted.
-- F# analyzers may not load with SDK 10's compiler; then they stay out (D9).
+- F# analyzers: resolved 2026-09-27, both packs run with SDK 10.0.401 and are in CI (log, Phase 2).
 - WebRequest is obsolete on .NET 6+ (SYSLIB0014, a warning, suppressed with a comment in the one file that keeps it); Microsoft has not announced its removal.
 
 ## Appendix: cleanup commands
@@ -196,4 +196,4 @@ branch	scratch/golden-capture-1.0.2
 
 ## Next single action
 
-Mark rules on D1 to D17, grants push access to m4bwav/IsImageUrlDotNet, and adds the Trusted Publishing policy; then push `scratch/golden-capture-1.0.2` and commit the Windows and macOS recordings.
+Mark reviews the pull request and gives the OK to delete the Travis webhook (83050297) and the branch `scratch/golden-capture-1.0.2`; then Phase 4.
