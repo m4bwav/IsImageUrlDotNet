@@ -100,8 +100,10 @@ jobs:
           Console.WriteLine(ok ? "answers as expected" : "wrong answer");
           return ok ? 0 : 1;
           EOF
-          dotnet restore "$dir" --source "$PWD/artifacts" --source https://api.nuget.org/v3/index.json
-          dotnet run --project "$dir" --no-restore
+          # A nuget.config, not --source twice: SDK 10.0.401 read the second --source URL as a local folder.
+          dotnet new nugetconfig -o "$dir"
+          dotnet nuget add source "$PWD/artifacts" -n local --configfile "$dir/nuget.config"
+          dotnet run --project "$dir"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: runner.os == 'Linux'
         with:
