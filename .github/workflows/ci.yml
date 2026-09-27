@@ -112,8 +112,9 @@ jobs:
           EOF
           # A nuget.config, not --source twice: SDK 10.0.401 read the second --source URL as a local folder.
           dotnet new nugetconfig -o "$dir"
-          # Git Bash on Windows: $PWD is /d/a/..., which dotnet cannot read; pwd -W gives D:/a/...
-          artifacts=$(cd artifacts && { pwd -W 2>/dev/null || pwd; })
+          # Git Bash on Windows: $PWD is /d/a/..., and `dotnet nuget add source` also refuses D:/a/...; it takes D:\a\...
+          artifacts="$PWD/artifacts"
+          if command -v cygpath >/dev/null; then artifacts=$(cygpath -w "$artifacts"); fi
           dotnet nuget add source "$artifacts" -n local --configfile "$dir/nuget.config"
           dotnet run --project "$dir"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
