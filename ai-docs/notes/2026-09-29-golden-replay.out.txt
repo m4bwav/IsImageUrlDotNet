@@ -1,0 +1,27 @@
+## golden replay on windows: net10.0, net48
+capture-1.0.2: the capture program unchanged
+capture-1.0.2: build exit 0; warnings none
+capture-1.0.2 net10.0: exit 0, 117 cases, assembly IsImageUrlDotNet 1.0.2.0, runtime .NET 10.0.12
+capture-1.0.2 net48: exit 0, 117 cases, assembly IsImageUrlDotNet 1.0.2.0, runtime .NET Framework 4.8.9345.0
+capture-2.0.0: Capture.fsproj changed in one line, PackageReference IsImageUrlDotNet [1.0.2] -> [2.0.0]; no other file changed
+capture-2.0.0: build exit 0; warnings FS0044
+capture-2.0.0 net10.0: exit 0, 117 cases, assembly IsImageUrlDotNet 2.0.0.0, runtime .NET 10.0.12
+capture-2.0.0 net48: exit 0, 117 cases, assembly IsImageUrlDotNet 2.0.0.0, runtime .NET Framework 4.8.9345.0
+
+## net10.0 against 1.0.2.net10.0-windows.json (recorded 2026-09-27, .NET 10.0.12, assembly IsImageUrlDotNet 1.0.2.0)
+1.0.2 today: same answer 117 of 117, same requests 117 of 117, both 117 of 117 (1 answers equal once the drive letter is swapped, as the golden test does)
+2.0.0 today: same answer 117 of 117, same requests 117 of 117, both 117 of 117 (1 answers equal once the drive letter is swapped, as the golden test does)
+2.0.0 against 1.0.2, both today: same answer 117, same requests 117, both 117 of 117
+
+## net48 against 1.0.2.net48-windows.json (recorded 2026-09-27, .NET Framework 4.8.9345.0, assembly IsImageUrlDotNet 1.0.2.0)
+1.0.2 today: same answer 117 of 117, same requests 117 of 117, both 117 of 117 (1 answers equal once the drive letter is swapped, as the golden test does)
+2.0.0 today: same answer 117 of 117, same requests 117 of 117, both 117 of 117 (1 answers equal once the drive letter is swapped, as the golden test does)
+2.0.0 against 1.0.2, both today: same answer 117, same requests 117, both 117 of 117
+
+## what the recordings hold that package-modernize's NuGet capture template would not have recorded
+1.0.2.mono-6.8-linux.reference.json: 117 cases; 102 request heads in 47 cases; 35 throws, 22 with a WebException status, 5 with an inner exception; 6 cases under tr-TR
+1.0.2.net10.0-linux.json: 117 cases; 106 request heads in 48 cases; 36 throws, 23 with a WebException status, 8 with an inner exception; 6 cases under tr-TR
+1.0.2.net10.0-macos.json: 117 cases; 106 request heads in 48 cases; 36 throws, 23 with a WebException status, 8 with an inner exception; 6 cases under tr-TR
+1.0.2.net10.0-windows.json: 117 cases; 106 request heads in 48 cases; 36 throws, 22 with a WebException status, 7 with an inner exception; 6 cases under tr-TR
+1.0.2.net48-windows.json: 117 cases; 102 request heads in 46 cases; 35 throws, 20 with a WebException status, 3 with an inner exception; 6 cases under tr-TR
+1.0.2 on net48 against 1.0.2 on net10.0 (Windows recordings): 50 of 117 cases differ in the full record, 10 in the template's view; 40 differ only in what the template drops (requests, status, inner exception)

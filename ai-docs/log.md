@@ -93,3 +93,11 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 
 ## [2026-09-27] update | 1.x deprecated
 - Registration index (catalog 2026.09.27.22.10.51): 1.0.0 and 1.0.2 deprecated, reasons ["Legacy"], message "1.x targets .NET Framework 4.5 and does not declare its FSharp.Core dependency; use 2.x"; no alternatePackage. 2.0.0-beta.1 and 2.0.0 not deprecated. An earlier read a few minutes after Mark saved showed no deprecation (index lag).
+
+## [2026-09-29] add | GitHub wiki for 2.0.0 (wikiwright 0.6.0), committed in the wiki clone, not pushed
+- Preflight: `placeholder` (Mark's first page). 9 pages plus sidebar and footer, committed as 737a3d2 in `..\IsImageUrlDotNet.wiki`; not pushed by request. Branch `wiki-2.0.0` here holds the note and the programs.
+- Verification: `notes/2026-09-29-wiki-verify.cs` against 2.0.0 from nuget.org; every request to a local stand-in proxy for `.test` hosts (gate on `.invalid` passed on net10.0, net48, net8.0, 1.0.2 and fsi before any case); C# on net10.0, net48 (net462 build) and net8.0 (netstandard2.0 build), F# under fsi, Linux in WSL (user-level SDK and ICU in scratch). Two Windows runs identical. check 0 errors, outputs 38/38, tells 0 strong, snippets 18/18.
+- Golden replay (`notes/2026-09-29-golden-replay.py`, capture copied to scratch, version changed in the copy only): 1.0.2 and 2.0.0 today 117/117 answers and requests on Windows net10.0 and net48 and on Linux net10.0. `tests/Golden` untouched.
+- `dotnet test` on the solution: net10.0 and net48, 116 + 116 passed.
+- Reading: `notes/2026-09-29-github-wiki.md` (facts the README lacks, 8 doc inaccuracies, update procedure).
+## [2026-09-29] index | rebuilt (5 entries)
