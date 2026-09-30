@@ -1,0 +1,405 @@
+## installed
+IsImageUrlDotNet 2.0.0 from nuget.org; runner .NET 10.0.12 on Ubuntu 26.04.1 LTS
+
+## builds
+cases-net100 (net10.0): built
+old-102 (net10.0): built
+old-102-no-fsharp-core (net10.0): built
+
+## f# restore (no proxy, no requests)
+restored
+
+## gate (net10.0)
+shared client http://gate.invalid/shared => HttpRequestException   [GET http://gate.invalid/shared]
+shared client https://gate.invalid/shared => HttpRequestException   [CONNECT gate.invalid:443]
+new HttpClient() http://gate.invalid/mine => HttpRequestException   [GET http://gate.invalid/mine]
+
+## gate (1.0.2 on net10.0)
+1.0.2 IsImageUrl http://gate.invalid/old => WebException (UnknownError)   [GET http://gate.invalid/old]
+
+## gate (dotnet fsi)
+http://gate.invalid/fsi HttpRequestException
+https://gate.invalid/fsi HttpRequestException
+GET http://gate.invalid/fsi HTTP/1.1
+CONNECT gate.invalid:443 HTTP/1.1
+
+## gate result
+every route failed at the stand-in: no request left the machine
+
+## child info (net10.0)
+runtime: .NET 10.0.12
+package build loaded: .NETCoreApp,Version=v10.0
+FSharp.Core loaded: 6.0.0.0 (6.0.7-beta.22513.8)
+ImageFileExtensions is a Microsoft.FSharp.Collections.FSharpList
+
+## child info (1.0.2 on net10.0, FSharp.Core 10.1.401 added by hand)
+IsImageUrlDotNet 1.0.2 ships lib/net45 only; NU1701 at restore
+
+## home and getting started: the first calls
+True
+False
+True
+
+## home and getting started: the first calls: requests the stand-in received
+GET http://images.test/avatar HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+
+## getting started: the static form
+True False
+
+## getting started: the static form: requests the stand-in received
+GET http://images.test/about HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+
+## getting started: your own client and a token
+True
+
+## getting started: your own client and a token: requests the stand-in received
+GET http://images.test/avatar HTTP/1.1
+Host: images.test
+
+## api reference: the extension lists
+png jpg jpeg gif raw bmp svg psd webp avif apng ico tif tiff heic heif
+png jpg gif raw bmp svg jpeg psd
+exe pdf html htm txt mp3 wav odp
+
+## api reference: the extension lists: requests the stand-in received
+(no request)
+
+## api reference: the obsolete 1.0.2 call
+True
+True
+
+## api reference: the obsolete 1.0.2 call: requests the stand-in received
+GET http://images.test/avatar HTTP/1.1
+Host: images.test
+Connection: Keep-Alive
+
+## edge cases: a null client throws before a task exists
+Value cannot be null. (Parameter 'httpClient')
+
+## edge cases: a null client throws before a task exists: requests the stand-in received
+(no request)
+
+## recipes: keep the URLs that look like images, offline
+https://example.com/photos/cat.PNG?w=200
+/static/logo.svg
+
+## recipes: keep the URLs that look like images, offline: requests the stand-in received
+(no request)
+
+## recipes: ask about several URLs at once
+http://images.test/avatar True
+http://images.test/about False
+http://images.test/photo True
+
+## recipes: ask about several URLs at once: requests the stand-in received
+GET http://images.test/about HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+GET http://images.test/avatar HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+GET http://images.test/avatar HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+GET http://images.test/photo HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+
+## recipes: treat an unreachable server as unknown
+http://images.test/avatar True
+http://images.test/close unknown
+
+## recipes: treat an unreachable server as unknown: requests the stand-in received
+GET http://images.test/avatar HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+GET http://images.test/close HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+GET http://images.test/close HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+GET http://images.test/close HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+GET http://images.test/close HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+
+## recipes: a shorter deadline for one call
+gave up after 2 seconds
+
+## recipes: a shorter deadline for one call: requests the stand-in received
+GET http://images.test/slow HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+
+## recipes: your own client with its own headers
+True
+
+## recipes: your own client with its own headers: requests the stand-in received
+GET http://images.test/avatar HTTP/1.1
+Host: images.test
+User-Agent: my-crawler/1.0 (+https://my.example/bot)
+Accept: image/*
+
+## recipes: let the package apply its redirect rules
+True
+False
+
+## recipes: let the package apply its redirect rules: requests the stand-in received
+GET http://images.test/photo HTTP/1.1
+Host: images.test
+GET http://images.test/avatar HTTP/1.1
+Host: images.test
+GET http://images.test/to-ftp HTTP/1.1
+Host: images.test
+
+## recipes: test your code without a network
+True
+False
+
+## recipes: test your code without a network: requests the stand-in received
+(no request)
+
+## behaviour: HasImageExtension answers
+HasImageExtension("https://example.com/photos/cat.PNG?w=200") => True   (no request)
+HasImageExtension("https://example.com/report.pdf") => False   (no request)
+HasImageExtension("https://example.com/a.png#top") => True   (no request)
+HasImageExtension("https://example.com/a.pdf?name=a.png") => False   (no request)
+HasImageExtension("https://example.com/dir.png/file") => False   (no request)
+HasImageExtension("https://example.com/a.png.") => False   (no request)
+HasImageExtension("https://example.com/") => False   (no request)
+HasImageExtension("Http://example.com/a.PNG") => True   (no request)
+HasImageExtension("  https://example.com/a.png  ") => True   (no request)
+HasImageExtension("https://example.com/%E2%82%AC.png") => True   (no request)
+HasImageExtension("https://example.com/x.heic") => True   (no request)
+HasImageExtension("https://example.com/x.TIF") => True   (no request)
+HasImageExtension("photos/cat.PNG?w=1") => True   (no request)
+HasImageExtension("/images/a.png") => True   (no request)
+HasImageExtension("images\a.png") => True   (no request)
+HasImageExtension("//cdn.example.com/a.png") => True   (no request)
+HasImageExtension("a b.png") => True   (no request)
+HasImageExtension("x.exe.png") => True   (no request)
+HasImageExtension("x.png.exe") => False   (no request)
+HasImageExtension(".png") => True   (no request)
+HasImageExtension("png") => False   (no request)
+HasImageExtension("") => False   (no request)
+HasImageExtension(null) => False   (no request)
+HasImageExtension("file:///tmp/a.png") => False   (no request)
+HasImageExtension("ftp://example.com/a.png") => False   (no request)
+HasImageExtension("data:image/png;base64,iVBORw0KGgo=") => False   (no request)
+HasImageExtension("C:\temp\x.png") => False   (no request)
+HasImageExtension("localhost:8080/a.png") => False   (no request)
+HasImageExtension("x.GIF") under tr-TR => True   (no request)
+
+## behaviour: IsImageUrlAsync answers with the shared client
+IsImageUrlAsync("http://images.test/avatar") => True   [GET http://images.test/avatar]
+IsImageUrlAsync("http://images.test/about") => False   [GET http://images.test/about]
+IsImageUrlAsync("http://images.test/upper") => True   [GET http://images.test/upper]
+IsImageUrlAsync("http://images.test/svg") => True   [GET http://images.test/svg]
+IsImageUrlAsync("http://images.test/x-imagefile") => False   [GET http://images.test/x-imagefile]
+IsImageUrlAsync("http://images.test/octet") => False   [GET http://images.test/octet]
+IsImageUrlAsync("http://images.test/no-type") => False   [GET http://images.test/no-type]
+IsImageUrlAsync("http://images.test/gone") => False   [GET http://images.test/gone]
+IsImageUrlAsync("http://images.test/error") => False   [GET http://images.test/error]
+IsImageUrlAsync("http://images.test/empty") => True   [GET http://images.test/empty]
+IsImageUrlAsync("http://images.test/photo") => True   [GET http://images.test/photo; GET http://images.test/avatar]
+IsImageUrlAsync("http://images.test/to-other") => True   [GET http://images.test/to-other; GET http://other.test/avatar]
+IsImageUrlAsync("http://images.test/loop") => False   [GET http://images.test/loop x 11]
+IsImageUrlAsync("http://images.test/to-ftp") => False   [GET http://images.test/to-ftp]
+IsImageUrlAsync("http://images.test/to-https") => HttpRequestException   [GET http://images.test/to-https; CONNECT secure.test:443]
+IsImageUrlAsync("https://secure.test/avatar") => HttpRequestException   [CONNECT secure.test:443]
+IsImageUrlAsync("http://images.test/close") => HttpRequestException   [GET http://images.test/close x 4]
+IsImageUrlAsync("http://images.test/garbage") => HttpRequestException   [GET http://images.test/garbage]
+IsImageUrlAsync("http://images.test/a.png?size=1") => True   (no request)
+IsImageUrlAsync("http://images.test/photo.webp") => True   (no request)
+IsImageUrlAsync("  http://images.test/avatar  ") => True   [GET http://images.test/avatar]
+IsImageUrlAsync("http://user:secret@images.test/avatar?size=large") => True   [GET http://images.test/avatar?size=large]
+IsImageUrlAsync("images.test/avatar") => False   (no request)
+IsImageUrlAsync("//images.test/avatar.png") => False   (no request)
+IsImageUrlAsync("avatar.png") => False   (no request)
+IsImageUrlAsync("ftp://images.test/a.png") => False   (no request)
+IsImageUrlAsync("") => False   (no request)
+IsImageUrlAsync(null) => False   (no request)
+
+## behaviour: the request the shared client sends
+head: shared client => True
+GET http://images.test/avatar?size=large HTTP/1.1
+Host: images.test
+User-Agent: IsImageUrlDotNet/2.0 (+https://github.com/m4bwav/IsImageUrlDotNet)
+head: new HttpClient() => True
+GET http://images.test/avatar?size=large HTTP/1.1
+Host: images.test
+
+## edge cases: redirects by client
+AllowAutoRedirect=false http://images.test/photo => True   [GET http://images.test/photo; GET http://images.test/avatar]
+AllowAutoRedirect=false http://images.test/loop => False   [GET http://images.test/loop x 11]
+AllowAutoRedirect=false http://images.test/to-ftp => False   [GET http://images.test/to-ftp]
+AllowAutoRedirect=false http://images.test/to-https => HttpRequestException   [GET http://images.test/to-https; CONNECT secure.test:443]
+new HttpClient() http://images.test/photo => True   [GET http://images.test/photo; GET http://images.test/avatar]
+new HttpClient() http://images.test/loop => False   [GET http://images.test/loop x 561]
+new HttpClient() http://images.test/to-ftp => False   [GET http://images.test/to-ftp; GET http://images.test/a.png]
+new HttpClient() http://images.test/to-https => HttpRequestException   [GET http://images.test/to-https; CONNECT secure.test:443]
+stand-in TLS, AllowAutoRedirect=false https://secure.test/avatar => True   [CONNECT secure.test:443; GET /avatar]
+stand-in TLS, AllowAutoRedirect=false https://secure.test/photo => True   [CONNECT secure.test:443; GET /photo; CONNECT secure.test:443; GET /avatar]
+stand-in TLS, AllowAutoRedirect=false https://secure.test/to-http => False   [CONNECT secure.test:443; GET /to-http]
+stand-in TLS, AllowAutoRedirect=true https://secure.test/to-http => False   [CONNECT secure.test:443; GET /to-http]
+
+## edge cases: exceptions and their messages
+http://images.test/close => HttpRequestException: An error occurred while sending the request.
+  inner HttpIOException: The response ended prematurely. (ResponseEnded)
+http://images.test/garbage => HttpRequestException: Received an invalid status line: 'NOT HTTP AT ALL'.
+https://secure.test/avatar => HttpRequestException: The SSL connection could not be established, see inner exception.
+  inner AuthenticationException: The remote certificate is invalid because of errors in the certificate chain: UntrustedRoot
+http://gate.invalid/x => HttpRequestException: Received an invalid status line: 'REFUSED BY THE STAND-IN'.
+
+## edge cases: timeouts and cancellation
+shared client: TaskCanceledException after 10 s: The request was canceled due to the configured HttpClient.Timeout of 10 seconds elapsing.
+  inner TimeoutException: The operation was canceled.
+  inner TaskCanceledException: The operation was canceled.
+  inner IOException: Unable to read data from the transport connection: Operation canceled.
+  inner SocketException: Operation canceled
+client with Timeout 1 s: TaskCanceledException after 1 s: The request was canceled due to the configured HttpClient.Timeout of 1 seconds elapsing.
+cancelled token, http://images.test/avatar => TaskCanceledException   (no request)
+cancelled token, http://images.test/a.png => True   (no request)
+
+## getting started: F# script
+true
+true
+true
+
+## getting started: F# script: requests the stand-in received
+GET http://images.test/avatar HTTP/1.1
+
+## recipes: F# task with your own client
+http://images.test/avatar true
+http://images.test/about false
+
+## recipes: F# task with your own client: requests the stand-in received
+GET http://images.test/avatar HTTP/1.1
+GET http://images.test/about HTTP/1.1
+
+## versions: the obsolete call from F#
+true
+--- stderr
+
+
+<scratch>/work/fsx/fs-obsolete.fsx(4,15): warning FS0044: This construct is deprecated. IsImageUrl keeps 1.0.2's answers, bugs included. Use ImageUrl.HasImageExtension (offline) or ImageUrl.IsImageUrlAsync (http and https only).
+
+## versions: the obsolete call from F#: requests the stand-in received
+(no request)
+
+## faq: F# and url.IsImageUrl()
+
+--- stderr
+
+
+<scratch>/work/fsx/fs-old-extension.fsx(4,27): error FS0039: The type 'String' does not define a field, constructor, or member named 'IsImageUrl'. Maybe you want one of the following:
+   IsImageUrlAsync
+--- exit 1
+
+## faq: F# and url.IsImageUrl(): requests the stand-in received
+(no request)
+
+## versions: 1.0.2 and 2.0.0 side by side (net10.0)
+"image.png"
+  1.0.2 IsImageUrl         True
+  2.0.0 IsImageUrl         True
+  2.0.0 HasImageExtension  True
+  2.0.0 IsImageUrlAsync    False
+"x.webp"
+  1.0.2 IsImageUrl         UriFormatException
+  2.0.0 IsImageUrl         UriFormatException
+  2.0.0 HasImageExtension  True
+  2.0.0 IsImageUrlAsync    False
+"a"
+  1.0.2 IsImageUrl         UriFormatException
+  2.0.0 IsImageUrl         UriFormatException
+  2.0.0 HasImageExtension  False
+  2.0.0 IsImageUrlAsync    False
+"photos/cat.png?w=1"
+  1.0.2 IsImageUrl         UriFormatException
+  2.0.0 IsImageUrl         UriFormatException
+  2.0.0 HasImageExtension  True
+  2.0.0 IsImageUrlAsync    False
+"ftp://images.test/a.png"
+  1.0.2 IsImageUrl         True
+  2.0.0 IsImageUrl         True
+  2.0.0 HasImageExtension  False
+  2.0.0 IsImageUrlAsync    False
+"http://images.test/avatar"
+  1.0.2 IsImageUrl         True  (1 request)
+  2.0.0 IsImageUrl         True  (1 request)
+  2.0.0 HasImageExtension  False
+  2.0.0 IsImageUrlAsync    True  (1 request)
+"http://images.test/a.png?size=1"
+  1.0.2 IsImageUrl         WebException (ProtocolError)  (1 request)
+  2.0.0 IsImageUrl         WebException (ProtocolError)  (1 request)
+  2.0.0 HasImageExtension  True
+  2.0.0 IsImageUrlAsync    True
+"http://images.test/about"
+  1.0.2 IsImageUrl         False  (1 request)
+  2.0.0 IsImageUrl         False  (1 request)
+  2.0.0 HasImageExtension  False
+  2.0.0 IsImageUrlAsync    False  (1 request)
+"http://images.test/upper"
+  1.0.2 IsImageUrl         False  (1 request)
+  2.0.0 IsImageUrl         False  (1 request)
+  2.0.0 HasImageExtension  False
+  2.0.0 IsImageUrlAsync    True  (1 request)
+"http://images.test/x-imagefile"
+  1.0.2 IsImageUrl         True  (1 request)
+  2.0.0 IsImageUrl         True  (1 request)
+  2.0.0 HasImageExtension  False
+  2.0.0 IsImageUrlAsync    False  (1 request)
+"http://images.test/gone"
+  1.0.2 IsImageUrl         WebException (ProtocolError)  (1 request)
+  2.0.0 IsImageUrl         WebException (ProtocolError)  (1 request)
+  2.0.0 HasImageExtension  False
+  2.0.0 IsImageUrlAsync    False  (1 request)
+"x.GIF" under tr-TR
+  1.0.2 IsImageUrl         UriFormatException
+  2.0.0 IsImageUrl         UriFormatException
+  2.0.0 HasImageExtension  True
+  2.0.0 IsImageUrlAsync    False
+
+## versions: 2.0.0's IsImageUrl against 1.0.2 today
+same answer 12 of 12; same request heads 12 of 12
+
+## versions: 1.0.2 in a C# project without FSharp.Core
+FileNotFoundException: Could not load file or assembly 'FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. The system cannot find the file specified.
+
+## api reference: compiler messages for url.IsImageUrl() and url.IsImageUrlAsync(default)
+warning CS0618: 'IsImageUrlDotNetLib.IsImageUrl(string?)' is obsolete: 'IsImageUrl keeps 1.0.2's answers, bugs included. Use ImageUrl.HasImageExtension (offline) or ImageUrl.IsImageUrlAsync (http and https only).'
+error CS0121: The call is ambiguous between the following methods or properties: 'IsImageUrlDotNet.ImageUrl.IsImageUrlAsync(string?, System.Threading.CancellationToken)' and 'IsImageUrlDotNet.ImageUrl.IsImageUrlAsync(string?, System.Net.Http.HttpClient)'
+build exit code 1
+
+## api reference: the public surface (net10.0 build, by reflection)
+static class IsImageUrlDotNet.ImageUrl [Extension]
+  IReadOnlyList<string> ImageExtensions { get; }
+  bool HasImageExtension(string url) [Extension]
+  Task<bool> IsImageUrlAsync(string url) [Extension]
+  Task<bool> IsImageUrlAsync(string url, CancellationToken cancellationToken) [Extension]
+  Task<bool> IsImageUrlAsync(string url, HttpClient httpClient) [Extension]
+  Task<bool> IsImageUrlAsync(string url, HttpClient httpClient, CancellationToken cancellationToken) [Extension]
+static class IsImageUrlDotNet.IsImageUrlDotNetLib [Extension]
+  FSharpList<string> ImageFileExtensions { get; }
+  FSharpList<string> NonImageFileExtensions { get; }
+  bool IsImageUrl(string opt) [Extension] [Obsolete("IsImageUrl keeps 1.0.2's answers, bugs included. Use ImageUrl.HasImageExtension (offline) or ImageUrl.IsImageUrlAsync (http and https only).", error: false)]
+
+## api reference: the three builds in the package
+lib/net10.0: 22016 bytes, 9 public methods, same public surface as the first; references FSharp.Core 6.0.0.0, netstandard 2.1.0.0, System.Collections 10.0.0.0, System.Net.Http 10.0.0.0, System.Net.Primitives 10.0.0.0, System.Net.Requests 10.0.0.0, System.Runtime 10.0.0.0
+lib/net462: 22528 bytes, 9 public methods, same public surface as the first; references FSharp.Core 6.0.0.0, mscorlib 4.0.0.0, netstandard 2.0.0.0, System 4.0.0.0, System.Core 4.0.0.0, System.Net.Http 4.2.0.0
+lib/netstandard2.0: 22016 bytes, 9 public methods, same public surface as the first; references FSharp.Core 6.0.0.0, netstandard 2.0.0.0
+
+## hosts the stand-in was asked for
+gate.invalid
+images.test
+other.test
+secure.test
+

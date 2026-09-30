@@ -5,6 +5,7 @@
 ## Current state (2026-09-27)
 - **IsImageUrlDotNet 2.0.0 is released and verified.** nuget.org lists 1.0.0, 1.0.2, 2.0.0-beta.1 and 2.0.0 (with icon). Release run 36350568172 (approved by Mark), GitHub Release v2.0.0 with nupkg and snupkg, verify-published run 36352902029 green on Ubuntu, Windows (net48 too) and macOS; the published README's three badges check clean.
 - The modernization plan (`ai-docs/plans/2026-09-27-modernization-and-v2-release.md`) is complete. Package validation now compares every pack with the published 2.0.0.
+- 2026-09-29: GitHub wiki for 2.0.0 written (9 pages, sidebar, footer) and committed in `..\IsImageUrlDotNet.wiki` as `737a3d2`, not pushed yet; how it was verified, the facts found and 8 doc inaccuracies (AGENTS.md 4, README 3, INDEX 1) are in `ai-docs/notes/2026-09-29-github-wiki.md`. Push: `git -C <wiki dir> push`, then `wikiwright.py live`.
 - Repository: rulesets `master` (24084842, required check `ci`, admin bypass) and `Tags only by admins` (24084845); secret scanning, push protection, private vulnerability reporting on; workflow permissions read.
 
 ## Owed by Mark (UI or decisions only)
