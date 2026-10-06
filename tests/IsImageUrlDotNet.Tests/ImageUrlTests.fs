@@ -242,12 +242,12 @@ let ``IsImageUrlAsync is false for anything but http and https, without a reques
 let ``IsImageUrlAsync throws HttpRequestException when it cannot ask`` (url: string) =
     use fixture = new Fixture()
 
-    Assert.That(TestDelegate(fun () -> ask fixture url |> ignore), Throws.InstanceOf<HttpRequestException>())
+    Assert.That(Action(fun () -> ask fixture url |> ignore), Throws.InstanceOf<HttpRequestException>())
 
 [<Test>]
 let ``IsImageUrlAsync throws for an explicit null client`` () =
     Assert.That(
-        TestDelegate(fun () ->
+        Action(fun () ->
             ImageUrl.IsImageUrlAsync("http://fixture.test/image-png", (null: HttpClient))
             |> ignore),
         Throws.TypeOf<ArgumentNullException>()
@@ -260,7 +260,7 @@ let ``IsImageUrlAsync honours cancellation`` () =
     cts.Cancel()
 
     Assert.That(
-        TestDelegate(fun () ->
+        Action(fun () ->
             ImageUrl
                 .IsImageUrlAsync("http://fixture.test/image-png", fixture.Client, cts.Token)
                 .GetAwaiter()
@@ -284,7 +284,7 @@ let ``IsImageUrlAsync times out with TaskCanceledException`` () =
         use client = new HttpClient(handler, Timeout = TimeSpan.FromMilliseconds 500.0)
 
         Assert.That(
-            TestDelegate(fun () ->
+            Action(fun () ->
                 ImageUrl.IsImageUrlAsync("http://fixture.test/image-png", client).GetAwaiter().GetResult()
                 |> ignore),
             Throws.InstanceOf<TaskCanceledException>()
@@ -347,6 +347,6 @@ let ``A redirect from http to https is followed`` () =
     use fixture = new Fixture(false)
 
     Assert.That(
-        TestDelegate(fun () -> ask fixture "http://fixture.test/redirect-https" |> ignore),
+        Action(fun () -> ask fixture "http://fixture.test/redirect-https" |> ignore),
         Throws.InstanceOf<HttpRequestException>()
     )
