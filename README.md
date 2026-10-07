@@ -1,5 +1,7 @@
 # IsImageUrlDotNet
 
+![A conveyor belt of parcels passing under a brass scanning lens, one parcel open revealing a framed picture inside, factory sorting room](https://raw.githubusercontent.com/m4bwav/IsImageUrlDotNet/master/.github/images/banner.jpg)
+
 [![NuGet](https://img.shields.io/nuget/v/IsImageUrlDotNet)](https://www.nuget.org/packages/IsImageUrlDotNet)
 [![ci](https://github.com/m4bwav/IsImageUrlDotNet/actions/workflows/ci.yml/badge.svg)](https://github.com/m4bwav/IsImageUrlDotNet/actions/workflows/ci.yml)
 [![Downloads](https://img.shields.io/nuget/dt/IsImageUrlDotNet)](https://www.nuget.org/packages/IsImageUrlDotNet)
