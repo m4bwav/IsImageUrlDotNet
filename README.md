@@ -65,6 +65,10 @@ Use `HasImageExtension` where 1.x was used as an offline check, and `IsImageUrlA
 - From C#, `url.IsImageUrlAsync(default)` does not compile: it is ambiguous between the `HttpClient` and the `CancellationToken` overloads. Pass `CancellationToken.None` or a client.
 - It does not download images, validate them, or read their dimensions.
 
+## Package page
+
+- NuGet: [IsImageUrlDotNet](https://www.nuget.org/packages/IsImageUrlDotNet)
+
 ## Contributing and support
 
 Issues and pull requests are welcome. Security problems: see [SECURITY.md](SECURITY.md). Changes are listed in [CHANGELOG.md](CHANGELOG.md). MIT licence.
